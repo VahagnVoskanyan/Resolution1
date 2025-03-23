@@ -114,7 +114,7 @@ class Seq2Seq(nn.Module):
         return outputs
 
 
-def train(model, iterator, optimizer, criterion, clip):
+def train(model, iterator, optimizer, criterion, clip, device):
     model.train()
     epoch_loss = 0
     
@@ -154,7 +154,7 @@ def train(model, iterator, optimizer, criterion, clip):
     return epoch_loss / len(iterator)
 
 
-def evaluate(model, iterator, criterion):
+def evaluate(model, iterator, criterion, device):
     model.eval()
     epoch_loss = 0
     
@@ -178,7 +178,7 @@ def evaluate(model, iterator, criterion):
     return epoch_loss / len(iterator)
 
 
-def predict(model, src_tensor, max_len, sos_idx, eos_idx):
+def predict(device, model, src_tensor, max_len, sos_idx, eos_idx, ):
     model.eval()
     
     with torch.no_grad():
@@ -247,6 +247,10 @@ def main():
     global device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'Using device: {device}')
+    if torch.cuda.is_available():
+        print(f"✅ Using GPU: {torch.cuda.get_device_name(0)}")
+    else:
+        print("⚠️ Using CPU (GPU not available or CUDA not enabled)")
     
     # Create save directory
     os.makedirs(args.save_dir, exist_ok=True)
