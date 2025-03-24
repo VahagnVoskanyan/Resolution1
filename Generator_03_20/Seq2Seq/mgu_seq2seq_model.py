@@ -413,3 +413,96 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+## --- ##
+# Add these methods to your existing MGUSeq2Seq class in mgu_seq2seq_model.py
+
+def generate(self, input_tensor, max_length=200, sos_token_id=1, eos_token_id=2):
+    """
+    Generate output sequence using greedy decoding.
+    
+    Args:
+        input_tensor: Input tensor of shape [batch_size, input_seq_len]
+        max_length: Maximum output sequence length
+        sos_token_id: Start of sequence token ID
+        eos_token_id: End of sequence token ID
+        
+    Returns:
+        Output tensor of shape [batch_size, output_seq_len]
+    """
+    batch_size = input_tensor.size(0)
+    
+    # Initialize encoder hidden state
+    encoder_hidden = self.encoder.init_hidden(batch_size, self.device)
+    
+    # Encoder forward pass
+    encoder_outputs, encoder_hidden = self.encoder(input_tensor, encoder_hidden)
+    
+    # Initialize decoder input with SOS token
+    decoder_input = torch.tensor([[sos_token_id] * batch_size], device=self.device).transpose(0, 1)
+    
+    # Use encoder's final hidden state to initialize decoder hidden state
+    decoder_hidden = encoder_hidden
+    
+    # Initialize output tensor
+    outputs = torch.zeros(batch_size, max_length, device=self.device, dtype=torch.long)
+    outputs[:, 0] = sos_token_id
+    
+    # Generate tokens sequentially
+    for t in range(1, max_length):
+        # Decoder forward pass
+        decoder_output, decoder_hidden, _ = self.decoder(
+            decoder_input, decoder_hidden, encoder_outputs
+        )
+        
+        # Get most likely token
+        _, topi = decoder_output.topk(1)
+        topi = topi.squeeze(-1).detach()  # detach from history as input
+        
+        # Add predicted token to outputs
+        outputs[:, t] = topi
+        
+        # If all sequences in batch have ended, stop generation
+        if (topi == eos_token_id).all():
+            break
+        
+        # Next input is current prediction
+        decoder_input = topi.unsqueeze(1)
+    
+    return outputs
+
+
+def load_model(model_path, token2idx, device='cpu'):
+    """
+    Load a trained MGU model from a checkpoint.
+    
+    Args:
+        model_path: Path to the model checkpoint
+        token2idx: Dictionary mapping tokens to indices
+        device: Device to load the model on ('cpu' or 'cuda')
+        
+    Returns:
+        Loaded model
+    """
+    # Get model hyperparameters from checkpoint
+    checkpoint = torch.load(model_path, map_location=device)
+    
+    # Create model with same hyperparameters
+    model = Seq2Seq(
+        input_size=len(token2idx),
+        hidden_size=checkpoint['hidden_size'],
+        output_size=len(token2idx),
+        n_layers=checkpoint['n_layers'],
+        dropout=checkpoint['dropout'],
+        device=device
+    )
+    
+    # Load weights
+    model.load_state_dict(checkpoint['model_state_dict'])
+    
+    # Move model to device
+    model = model.to(device)
+    
+    return model

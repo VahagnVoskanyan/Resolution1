@@ -1,0 +1,80 @@
+# TPTP MGU Tester Usage Guide
+
+This guide explains how to use the TPTP MGU tester to evaluate your trained MGU prediction model on standard TPTP problems.
+
+## Prerequisites
+
+1. A trained MGU Seq2Seq model saved as a checkpoint
+2. The vocabulary file (`vocab.json`) used during training
+3. TPTP problem files or a directory containing TPTP problems
+
+## Installation
+
+First, install the required dependencies:
+
+```bash
+# Install the required packages
+pip install pytptp tqdm torch numpy
+```
+
+## Basic Usage
+
+Test your model on a single TPTP file:
+
+```bash
+python tptp_mgu_tester.py \
+  --model-path path/to/your/model_checkpoint.pt \
+  --vocab-path path/to/your/vocab.json \
+  --tptp-path path/to/problem.p \
+  --output-file results.json
+```
+
+Test your model on a directory of TPTP files:
+
+```bash
+python tptp_mgu_tester.py \
+  --model-path path/to/your/model_checkpoint.pt \
+  --vocab-path path/to/your/vocab.json \
+  --tptp-path path/to/tptp_directory \
+  --max-files 10 \
+  --output-file results.json
+```
+
+## Command Line Arguments
+
+- `--model-path`: Path to the trained model checkpoint (required)
+- `--vocab-path`: Path to the vocabulary file (required)
+- `--tptp-path`: Path to a TPTP problem file or directory (required)
+- `--output-file`: Path to save the results (default: `mgu_test_results.json`)
+- `--max-files`: Maximum number of TPTP files to process (default: process all files)
+- `--device`: Device to run the model on (`cpu` or `cuda`, default: `cpu`)
+
+## Obtaining TPTP Problems
+
+You can download the TPTP problem set from the official website:
+[http://www.tptp.org/](http://www.tptp.org/)
+
+## Interpreting Results
+
+The results file contains detailed information about each test case, including:
+
+- The input clauses
+- The predicted MGU
+- The actual MGU
+- Whether the prediction was correct
+
+The script also prints a summary of the results, including the percentage of correct predictions.
+
+## Limitations
+
+- The current implementation performs a simplified evaluation of MGU predictions based on string matching
+- The TPTP parser may not handle all TPTP constructs correctly
+- The MGU finder may not find all potential resolvable clause pairs
+
+## Extending the Tester
+
+You can extend the tester by:
+
+1. Implementing a more sophisticated MGU equivalence checker in the `evaluate_mgu_prediction` method
+2. Enhancing the TPTP parser to handle more TPTP constructs
+3. Improving the MGU finder to identify more potential resolvable clause pairs
