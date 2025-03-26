@@ -69,8 +69,8 @@ def main():
     criterion = torch.nn.CrossEntropyLoss(ignore_index=0)
 
     # Evaluate the model on the test set
-    test_loss = evaluate(model, test_loader, criterion, device)
-    print(f"\nFinal Test Loss: {test_loss:.4f}")
+    #test_loss = evaluate(model, test_loader, criterion, device)
+    #print(f"\nFinal Test Loss: {test_loss:.4f}")
 
     # Run a few sample predictions from the test set
     print("\nTesting model on some examples:")
@@ -86,3 +86,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#uncomment test_loss
+#python test_model.py --data-dir mgu_data --model-file models/mgu_seq2seq_finetuned2.pt
