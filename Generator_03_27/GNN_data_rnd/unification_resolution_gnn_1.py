@@ -5,7 +5,7 @@ class UnificationResolution:
         self,
         variables: List[str] = None,
     ):
-        self.variables = variables or ["X", "Y", "Z", "U", "V", "W"]
+        self.variables = variables or ["X", "Y", "Z"]#, "U", "V", "W"]
 
     # -------------------------------------------------------------------------
     # 2) Resolution / Unification Logic

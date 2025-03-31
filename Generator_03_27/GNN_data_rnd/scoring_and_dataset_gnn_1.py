@@ -3,8 +3,8 @@ import itertools
 import json
 from typing import List, Dict, Any, Optional
 
-from data_generator_gnn_1 import RandomGenerators
-from data_generator_gnn_1_res import UnificationResolution
+from random_generators_gnn_1 import RandomGenerators
+from unification_resolution_gnn_1 import UnificationResolution
 
 class ResolutionDataGenerator:
     def __init__(
@@ -35,7 +35,9 @@ class ResolutionDataGenerator:
         )
 
         # We create one instance of the resolution/unification logic
-        self.resolver = UnificationResolution()
+        self.resolver = UnificationResolution(
+            #variables=(variables or ["x", "y", "z"])
+        )
 
         random.seed(seed)
 
@@ -54,7 +56,7 @@ class ResolutionDataGenerator:
         Returns a numeric score for resolving clauses[i] and clauses[j] at literal idxA, idxB.
         The smaller the better, so we'll pick the minimal score as 'best'.
         """
-        resolvent = self.resolve_clauses(clauses[i], clauses[j], idxA, idxB)
+        resolvent = self.resolver.resolve_clauses(clauses[i], clauses[j], idxA, idxB)
         if resolvent is None:
             return float("inf")  # not resolvable => can't use
 
@@ -88,7 +90,7 @@ class ResolutionDataGenerator:
          4) Return the single best pair
         """
         n_clauses = random.randint(min_clauses, max_clauses)
-        clauses = [self.generate_random_clause() for _ in range(n_clauses)]
+        clauses = [self.rgen.generate_random_clause_preemptive() for _ in range(n_clauses)]
 
         all_pairs = []  # will hold ((i, idxA), (j, idxB), score)
         # Pairwise check across different clauses
@@ -159,16 +161,34 @@ class ResolutionDataGenerator:
         return dataset
     
 if __name__ == "__main__":
-    generator = ResolutionDataGenerator()
-    a = generator.generate_random_clause()
+    generator = ResolutionDataGenerator(seed=2023)
+    data = generator.create_dataset(n_examples=800, min_clauses=3, max_clauses=10)
 
-    print(a)
-    
+    # Count how many entries have a valid best_pair (i.e., not None)
+    valid_best_pair_count = sum(1 for entry in data if entry["best_pair"] is not None)
+    print(f"Found {valid_best_pair_count} best pairs out of {len(data)} examples.")
+
+    # Count and print details for empty clause resolvents
+    empty_clause_count = 0
+    for idx, entry in enumerate(data):
+        for pair in entry["resolvable_pairs"]:
+            if pair["score"] == -1000.0:
+                empty_clause_count += 1
+                #print(f"Empty clause in example {idx}: "
+                #      f"clauseA_index={pair['clauseA_index']} (literal index {pair['literalA_index']}), "
+                #      f"clauseB_index={pair['clauseB_index']} (literal index {pair['literalB_index']}).")
+    print(f"Found {empty_clause_count} empty clause resolvents in total.")
+
+    # Print or save
+    # for d in data:
+        # print(d)
+
+
     # dataset = generator.create_dataset(n_examples=5, min_clauses=3, max_clauses=5)
-    # # Write to a JSONL file
-    # with open("toy_gnn_dataset.jsonl", "w") as f:
-    #     for item in dataset:
-    #         f.write(json.dumps(item) + "\n")
+    # Write to a JSONL file
+    with open("toy_gnn_dataset.jsonl", "w") as f:
+        for item in data:
+            f.write(json.dumps(item) + "\n")
 
     # # Print out the first sample
     # import pprint
