@@ -1,13 +1,14 @@
 import json
 import os
 import random
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Tuple
 
 import torch
 import torch.nn.functional as F
 from torch_geometric.data import Data, Dataset
 from torch_geometric.loader import DataLoader
 from torch_geometric.nn import SAGEConv
+
 
 ##############################################################################
 # 1) Data utilities: parse and embed literals
@@ -241,23 +242,42 @@ class EdgeClassifierGNN(torch.nn.Module):
 
 
 ##############################################################################
-# 4) Train / Test Split and Training Loop
+# 4) Split the dataset into train/val/test
 ##############################################################################
 
-def split_dataset(dataset: Dataset, train_ratio=0.8):
+def split_dataset_3way(
+    dataset: Dataset,
+    splits: Tuple[float, float, float] = (0.7, 0.15, 0.15),
+    seed: int = 42
+):
     """
-    Shuffle and split the dataset into train & test subsets.
+    Shuffle and split the dataset into train, val, test subsets according to the
+    given ratio (sum should be ~1.0).
     """
-    indices = list(range(len(dataset)))
+    assert abs(sum(splits) - 1.0) < 1e-5, "Splits must sum to 1"
+    length = len(dataset)
+    indices = list(range(length))
+    random.seed(seed)
     random.shuffle(indices)
-    split_point = int(len(dataset) * train_ratio)
-    train_idx = indices[:split_point]
-    test_idx  = indices[split_point:]
 
-    # Subset objects
+    train_ratio, val_ratio, test_ratio = splits
+    train_end = int(train_ratio * length)
+    val_end   = train_end + int(val_ratio * length)
+
+    train_idx = indices[:train_end]
+    val_idx   = indices[train_end:val_end]
+    test_idx  = indices[val_end:]
+
     train_set = torch.utils.data.Subset(dataset, train_idx)
+    val_set   = torch.utils.data.Subset(dataset, val_idx)
     test_set  = torch.utils.data.Subset(dataset, test_idx)
-    return train_set, test_set
+
+    return train_set, val_set, test_set
+
+
+##############################################################################
+# 5) Training and evaluation logic
+##############################################################################
 
 def train_one_epoch(model, loader, optimizer, device):
     model.train()
@@ -269,82 +289,96 @@ def train_one_epoch(model, loader, optimizer, device):
         logits = model(batch.x, batch.edge_index)
         # batch.y are the edge labels
         # shape: logits [num_edges, 2], y [num_edges]
-        if len(batch.y) == 0:
-            # No edges to classify => skip
+        if batch.y.size(0) == 0:
+            # If no edges, skip
             continue
 
         loss = F.cross_entropy(logits, batch.y)
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
+    if len(loader) == 0:
+        return 0.0
     return total_loss / len(loader)
 
 
+@torch.no_grad()
 def evaluate(model, loader, device):
     model.eval()
     correct = 0
     total = 0
     for batch in loader:
         batch = batch.to(device)
-        with torch.no_grad():
-            logits = model(batch.x, batch.edge_index)
-            if len(batch.y) == 0:
-                continue
-            pred = logits.argmax(dim=1)
-            correct += (pred == batch.y).sum().item()
-            total += batch.y.size(0)
+        logits = model(batch.x, batch.edge_index)
+        if batch.y.size(0) == 0:
+            continue
+        pred = logits.argmax(dim=1)
+        correct += (pred == batch.y).sum().item()
+        total += batch.y.size(0)
     acc = correct / total if total > 0 else 0.0
     return acc
 
 
+##############################################################################
+# 6) Main: training loop with best-model saving
+##############################################################################
+
 def main():
-    ########################################
     # Config
-    ########################################
-    jsonl_file = "toy_gnn_dataset.jsonl"  # path to your dataset
+    jsonl_file = "toy_gnn_dataset.jsonl"  # path to your generated dataset
     known_predicates = ["Pred1", "Pred2", "Pred3"]  # from your random generator
+    max_args = 3  # up to 3 arguments in a literal
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    ########################################
-    # Dataset
-    ########################################
+    # Load dataset
     dataset = ClauseResolutionDataset(
         jsonl_file=jsonl_file,
         predicate_list=known_predicates,
-        max_args=3  # up to 3 arguments per literal
+        max_args=max_args
     )
 
-    train_set, test_set = split_dataset(dataset, train_ratio=0.8)
+    # Split train/val/test
+    train_set, val_set, test_set = split_dataset_3way(dataset, (0.7, 0.15, 0.15), seed=42)
     train_loader = DataLoader(train_set, batch_size=8, shuffle=True)
+    val_loader   = DataLoader(val_set,   batch_size=8, shuffle=False)
     test_loader  = DataLoader(test_set,  batch_size=8, shuffle=False)
 
-    ########################################
-    # Model & Optim
-    ########################################
-    # Input dim for node features: 
-    #   sign_feature => 1
-    #   predicate_index => 1
-    #   arg_types => max_args (3)
-    # => total = 1 + 1 + 3 = 5
-    in_dim = 5
+    # Build model
+    in_dim = 1 + 1 + max_args  # sign + predicate_idx + arg_types
     hidden_dim = 64
+    model = EdgeClassifierGNN(in_dim, hidden_dim, out_dim=2).to(device)
 
-    model = EdgeClassifierGNN(in_dim=in_dim, hidden_dim=hidden_dim, out_dim=2).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    ########################################
-    # Training Loop
-    ########################################
-    num_epochs = 20
+    # Training loop
+    num_epochs = 30
+    best_val_acc = 0.0
+    best_model_path = "best_model.pt"
+
     for epoch in range(num_epochs):
         train_loss = train_one_epoch(model, train_loader, optimizer, device)
         train_acc = evaluate(model, train_loader, device)
-        test_acc  = evaluate(model, test_loader, device)
+        val_acc   = evaluate(model, val_loader, device)
+
+        # Check for improvement
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            torch.save(model.state_dict(), best_model_path)
 
         print(f"Epoch {epoch+1:02d} | "
-              f"Loss: {train_loss:.4f} | "
+              f"Train Loss: {train_loss:.4f} | "
               f"Train Acc: {train_acc:.4f} | "
-              f"Test Acc: {test_acc:.4f}")
+              f"Val Acc: {val_acc:.4f}")
+
+    print("Training complete.")
+
+    # Load best model
+    model.load_state_dict(torch.load(best_model_path, map_location=device))
+    print(f"Loaded best model (val_acc = {best_val_acc:.4f}) from {best_model_path}.")
+
+    # Final test evaluation
+    test_acc = evaluate(model, test_loader, device)
+    print(f"Test Accuracy: {test_acc:.4f}")
 
 
 if __name__ == "__main__":
