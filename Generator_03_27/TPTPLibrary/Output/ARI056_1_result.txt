@@ -1,0 +1,4 @@
+% Running in auto input_syntax mode. Trying TPTP
+cnf(u4,negated_conjecture,
+    12 = X0).
+

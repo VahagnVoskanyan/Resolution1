@@ -1,0 +1,40 @@
+% Running in auto input_syntax mode. Trying TPTP
+cnf(u15,axiom,
+    ~$less(X0,X1) | ~$less(X1,$sum(X0,1))).
+
+cnf(u14,axiom,
+    $uminus($uminus(X0)) = X0).
+
+cnf(u13,axiom,
+    $less(X0,X1) | $less(X1,$sum(X0,1))).
+
+cnf(u12,axiom,
+    ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2))).
+
+cnf(u11,axiom,
+    $less(X0,X1) | $less(X1,X0) | X0 = X1).
+
+cnf(u10,axiom,
+    ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2)).
+
+cnf(u9,axiom,
+    ~$less(X0,X0)).
+
+cnf(u8,axiom,
+    0 = $sum(X0,$uminus(X0))).
+
+cnf(u7,axiom,
+    $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0))).
+
+cnf(u6,axiom,
+    $sum(X0,0) = X0).
+
+cnf(u5,axiom,
+    $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2)).
+
+cnf(u4,axiom,
+    $sum(X0,X1) = $sum(X1,X0)).
+
+cnf(u17,negated_conjecture,
+    $less(2,2)).
+

@@ -1,5 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./Seq2Seq"
-    ]
-}

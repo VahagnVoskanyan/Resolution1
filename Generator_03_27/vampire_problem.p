@@ -1,19 +1,25 @@
-% Problem: resolution_problem_6070
-tff(predicates, type, Pred1: $i * $i > $o & Pred2: $i > $o & Pred3: $i > $o).
-tff(functions, type, func_f: $i > $i & func_g: $i > $i & func_h: $i > $i).
-tff(axiom_1, axiom, (Pred2(Z,Z) | ~Pred1(X,Y))).
-tff(axiom_2, axiom, (~Pred1(Y) | ~Pred3(Y,Y))).
-tff(axiom_3, axiom, (~Pred3(Y,X) | ~Pred3(Z,Y) | ~Pred1(Y,Z))).
-tff(axiom_4, axiom, (Pred2(Y,Y) | Pred3(X,Z))).
-tff(axiom_5, axiom, (~Pred2(Z,Y) | Pred3(X) | Pred2(X,X))).
-tff(axiom_6, axiom, (Pred3(Z,Z) | Pred2(Z) | Pred2(X,Z))).
-tff(axiom_7, axiom, (~Pred3(Z) | Pred2(X,X))).
-tff(axiom_8, axiom, (~Pred1(X,Y) | Pred2(X,X) | Pred2(X,Z))).
-tff(axiom_9, axiom, (Pred1(Z,Y) | ~Pred1(Z,X) | ~Pred2(X,Z))).
-tff(axiom_10, axiom, (Pred3(Y) | ~Pred3(Y,X))).
-tff(axiom_11, axiom, (~Pred3(Y,Z) | Pred1(X,Y))).
-tff(axiom_12, axiom, (~Pred3(X,Y) | ~Pred2(Z,Z) | Pred3(X,X))).
-tff(axiom_13, axiom, (~Pred2(X,Z) | Pred3(X) | Pred1(Z,Y))).
-tff(axiom_14, axiom, (~Pred1(X) | Pred1(Y,Z))).
-tff(axiom_15, axiom, (Pred1(Z,Z) | ~Pred2(X,Y) | ~Pred1(Y))).
-tff(goal, conjecture, (Pred1(Y) | ~Pred1(Z,Y))).
+% TPTP problem file generated for Vampire
+tff(type_declarations, type,
+  P: $i * $i * $i > $o & Q: $i > $o & R: $i > $o & S: $i * $i > $o & T: $i * $i > $o
+).
+
+tff(function_declarations, type,
+  f: $i > $i & g: $i > $i & h: $i > $i
+).
+
+tff(axiom_1, axiom, R(x,w,x) | P(v,w)).
+tff(axiom_2, axiom, T(w,w,u) | ~S(x,x) | ~R(y,y)).
+tff(axiom_3, axiom, P(z,u,v) | ~T(w,u,z)).
+tff(axiom_4, axiom, R(y,w) | ~T(v,u,x)).
+tff(axiom_5, axiom, T(z,v,z) | R(v)).
+tff(axiom_6, axiom, T(w,w) | P(u,w,w) | T(v,u,v)).
+tff(axiom_7, axiom, ~T(z,x,z) | S(u)).
+tff(axiom_8, axiom, ~Q(v,y) | ~R(x)).
+tff(axiom_9, axiom, S(w,z,x) | ~S(u) | S(w,u,u)).
+tff(axiom_10, axiom, ~Q(y,z) | Q(w,u) | S(z,v)).
+tff(axiom_11, axiom, Q(x,x) | P(y,u,w)).
+tff(axiom_12, axiom, ~S(x,x,x) | ~R(v,w,y)).
+tff(axiom_13, axiom, ~T(v) | ~P(z,w) | P(u,x,x)).
+tff(axiom_14, axiom, P(u,x) | S(v,v,v)).
+tff(axiom_15, axiom, S(v,u,z) | Q(v,y)).
+tff(goal, conjecture, P(v,z,u) | P(y,y,x) | P(y,u,u)).

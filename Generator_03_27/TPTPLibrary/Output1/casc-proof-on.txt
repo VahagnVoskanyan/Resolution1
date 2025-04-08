@@ -1,0 +1,224 @@
+2025-04-08 10:35:01 % Running in auto input_syntax mode. Trying TPTP
+2025-04-08 10:35:01 % WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+2025-04-08 10:35:01 % lrs+2_5:39_bsr=unit_only:to=lpo:drc=off:sil=128000:plsq=on:plsqr=2,19:sp=frequency:lcm=reverse:fd=preordered:s2a=on:i=38749:s2at=-1.0:fsr=off:uhcvi=on:rawr=on:aer=off:lwlo=on:add=off:bce=on:acc=model:afr=on_0 on CAT001-1 for (194ds/38749Mi)
+2025-04-08 10:35:01 perf_event_open failed (instruction limiting will be disabled): No such file or directory
+2025-04-08 10:35:01 (If you are seeing 'Permission denied' ask your admin to run 'sudo sysctl -w kernel.perf_event_paranoid=-1' for you.)
+2025-04-08 10:35:21 % Time limit reached! 
+2025-04-08 10:35:21 % ------------------------------
+2025-04-08 10:35:21 % Version: Vampire 4.9 (Release build, commit e0a91a05f on 2025-02-11 21:40:29 +0000)
+2025-04-08 10:35:21 % Termination reason: Time limit
+2025-04-08 10:35:21 % Termination phase: Saturation
+2025-04-08 10:35:21 
+2025-04-08 10:35:21 % Time elapsed: 19.401 s
+2025-04-08 10:35:21 % Peak memory usage: 171 MB
+2025-04-08 10:35:21 % ------------------------------
+2025-04-08 10:35:21 % ------------------------------
+2025-04-08 10:35:21 % WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+2025-04-08 10:35:21 % lrs+1002_74:59_drc=off:tgt=full:sos=all:cond=fast:i=124987:kws=inv_frequency:afp=300:afq=2.0744697298148953:rawr=on:urr=full:sil=128000:si=on:rtra=on:random_seed=3250543_0 on CAT001-1 for (625ds/124987Mi)
+2025-04-08 10:35:21 perf_event_open failed (instruction limiting will be disabled): No such file or directory
+2025-04-08 10:35:21 (If you are seeing 'Permission denied' ask your admin to run 'sudo sysctl -w kernel.perf_event_paranoid=-1' for you.)
+2025-04-08 10:36:23 % Time limit reached! 
+2025-04-08 10:36:23 % ------------------------------
+2025-04-08 10:36:23 % Version: Vampire 4.9 (Release build, commit e0a91a05f on 2025-02-11 21:40:29 +0000)
+2025-04-08 10:36:23 % Termination reason: Time limit
+2025-04-08 10:36:23 % Termination phase: Saturation
+2025-04-08 10:36:23 
+2025-04-08 10:36:23 % Time elapsed: 62.500 s
+2025-04-08 10:36:23 % Peak memory usage: 151 MB
+2025-04-08 10:36:23 % ------------------------------
+2025-04-08 10:36:23 % ------------------------------
+2025-04-08 10:36:23 % WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+2025-04-08 10:36:23 % lrs+11_1:16_to=lpo:drc=off:bsd=on:sp=frequency:i=172350:bs=on:av=off:fsd=on:sil=256000:fdi=50_0 on CAT001-1 for (180ds/172350Mi)
+2025-04-08 10:36:23 perf_event_open failed (instruction limiting will be disabled): No such file or directory
+2025-04-08 10:36:23 (If you are seeing 'Permission denied' ask your admin to run 'sudo sysctl -w kernel.perf_event_paranoid=-1' for you.)
+2025-04-08 10:36:23 % Solution written to "/tmp/vampire-proof-1"
+2025-04-08 10:36:23 % Refutation found. Thanks to Tanya!
+2025-04-08 10:36:23 % SZS status Unsatisfiable for CAT001-1
+2025-04-08 10:36:23 % SZS output start Proof for CAT001-1
+2025-04-08 10:36:23 fof(f7943,plain,(
+2025-04-08 10:36:23   $false),
+2025-04-08 10:36:23   inference(subsumption_resolution,[],[f7908,f23])).
+2025-04-08 10:36:23 fof(f23,negated_conjecture,(
+2025-04-08 10:36:23   h != g),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f7908,plain,(
+2025-04-08 10:36:23   h = g),
+2025-04-08 10:36:23   inference(resolution,[],[f7546,f5832])).
+2025-04-08 10:36:23 fof(f5832,plain,(
+2025-04-08 10:36:23   ( ! [X0] : (~product(c,X0,compose(c,h)) | h = X0) )),
+2025-04-08 10:36:23   inference(resolution,[],[f5366,f20])).
+2025-04-08 10:36:23 fof(f20,axiom,(
+2025-04-08 10:36:23   ( ! [X8,X9,X7] : (~product(c,X7,X8) | ~product(c,X9,X8) | X7 = X9) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f5366,plain,(
+2025-04-08 10:36:23   product(c,h,compose(c,h))),
+2025-04-08 10:36:23   inference(resolution,[],[f5327,f1])).
+2025-04-08 10:36:23 fof(f1,axiom,(
+2025-04-08 10:36:23   ( ! [X0,X1] : (~defined(X0,X1) | product(X0,X1,compose(X0,X1))) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f5327,plain,(
+2025-04-08 10:36:23   defined(c,h)),
+2025-04-08 10:36:23   inference(resolution,[],[f5299,f3190])).
+2025-04-08 10:36:23 fof(f3190,plain,(
+2025-04-08 10:36:23   ( ! [X0,X1] : (~product(domain(b),X0,X1) | defined(c,X0)) )),
+2025-04-08 10:36:23   inference(superposition,[],[f3121,f1286])).
+2025-04-08 10:36:23 fof(f1286,plain,(
+2025-04-08 10:36:23   domain(c) = domain(b)),
+2025-04-08 10:36:23   inference(resolution,[],[f415,f363])).
+2025-04-08 10:36:23 fof(f363,plain,(
+2025-04-08 10:36:23   product(domain(c),domain(b),domain(b))),
+2025-04-08 10:36:23   inference(resolution,[],[f32,f67])).
+2025-04-08 10:36:23 fof(f67,plain,(
+2025-04-08 10:36:23   product(domain(c),domain(b),domain(c))),
+2025-04-08 10:36:23   inference(resolution,[],[f64,f50])).
+2025-04-08 10:36:23 fof(f50,plain,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (~product(X2,X0,X1) | product(X0,domain(X1),X0)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f29,f36])).
+2025-04-08 10:36:23 fof(f36,plain,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (defined(X0,domain(X1)) | ~product(X2,X0,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f3,f12])).
+2025-04-08 10:36:23 fof(f12,axiom,(
+2025-04-08 10:36:23   ( ! [X0] : (defined(X0,domain(X0))) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f3,axiom,(
+2025-04-08 10:36:23   ( ! [X2,X3,X0,X1] : (~defined(X3,X2) | defined(X1,X2) | ~product(X0,X1,X3)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f29,plain,(
+2025-04-08 10:36:23   ( ! [X0,X1] : (~defined(X0,domain(X1)) | product(X0,domain(X1),X0)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f17,f10])).
+2025-04-08 10:36:23 fof(f10,axiom,(
+2025-04-08 10:36:23   ( ! [X0] : (identity_map(domain(X0))) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f17,axiom,(
+2025-04-08 10:36:23   ( ! [X0,X1] : (~identity_map(X1) | ~defined(X0,X1) | product(X0,X1,X0)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f64,plain,(
+2025-04-08 10:36:23   product(b,domain(c),b)),
+2025-04-08 10:36:23   inference(resolution,[],[f50,f19])).
+2025-04-08 10:36:23 fof(f19,axiom,(
+2025-04-08 10:36:23   product(a,b,c)),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f32,plain,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (~product(domain(X0),X1,X2) | product(domain(X0),X1,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f27,f2])).
+2025-04-08 10:36:23 fof(f2,axiom,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (defined(X0,X1) | ~product(X0,X1,X2)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f27,plain,(
+2025-04-08 10:36:23   ( ! [X0,X1] : (~defined(domain(X0),X1) | product(domain(X0),X1,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f16,f10])).
+2025-04-08 10:36:23 fof(f16,axiom,(
+2025-04-08 10:36:23   ( ! [X0,X1] : (~identity_map(X0) | ~defined(X0,X1) | product(X0,X1,X1)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f415,plain,(
+2025-04-08 10:36:23   ( ! [X0] : (~product(domain(c),domain(b),X0) | domain(c) = X0) )),
+2025-04-08 10:36:23   inference(resolution,[],[f18,f67])).
+2025-04-08 10:36:23 fof(f18,axiom,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1,X6] : (~product(X0,X1,X2) | ~product(X0,X1,X6) | X2 = X6) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f3121,plain,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (~product(domain(X0),X1,X2) | defined(X0,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f3078,f2])).
+2025-04-08 10:36:23 fof(f3078,plain,(
+2025-04-08 10:36:23   ( ! [X0,X1] : (~defined(domain(X0),X1) | defined(X0,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f2648,f14])).
+2025-04-08 10:36:23 fof(f14,axiom,(
+2025-04-08 10:36:23   ( ! [X0] : (product(X0,domain(X0),X0)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f2648,plain,(
+2025-04-08 10:36:23   ( ! [X2,X3,X0,X1] : (~product(X1,domain(X0),X2) | defined(X1,X3) | ~defined(domain(X0),X3)) )),
+2025-04-08 10:36:23   inference(superposition,[],[f2081,f690])).
+2025-04-08 10:36:23 fof(f690,plain,(
+2025-04-08 10:36:23   ( ! [X0] : (domain(X0) = codomain(domain(X0))) )),
+2025-04-08 10:36:23   inference(resolution,[],[f425,f52])).
+2025-04-08 10:36:23 fof(f52,plain,(
+2025-04-08 10:36:23   ( ! [X0] : (product(codomain(domain(X0)),domain(X0),codomain(domain(X0)))) )),
+2025-04-08 10:36:23   inference(resolution,[],[f29,f13])).
+2025-04-08 10:36:23 fof(f13,axiom,(
+2025-04-08 10:36:23   ( ! [X0] : (defined(codomain(X0),X0)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f425,plain,(
+2025-04-08 10:36:23   ( ! [X0,X1] : (~product(codomain(X0),X0,X1) | X0 = X1) )),
+2025-04-08 10:36:23   inference(resolution,[],[f18,f15])).
+2025-04-08 10:36:23 fof(f15,axiom,(
+2025-04-08 10:36:23   ( ! [X0] : (product(codomain(X0),X0,X0)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f2081,plain,(
+2025-04-08 10:36:23   ( ! [X2,X3,X0,X1] : (~product(X2,codomain(X0),X3) | defined(X2,X1) | ~defined(codomain(X0),X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f212,f2])).
+2025-04-08 10:36:23 fof(f212,plain,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (~defined(X2,codomain(X0)) | ~defined(codomain(X0),X1) | defined(X2,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f9,f11])).
+2025-04-08 10:36:23 fof(f11,axiom,(
+2025-04-08 10:36:23   ( ! [X0] : (identity_map(codomain(X0))) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f9,axiom,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (~identity_map(X1) | ~defined(X1,X2) | ~defined(X0,X1) | defined(X0,X2)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f5299,plain,(
+2025-04-08 10:36:23   product(domain(b),h,h)),
+2025-04-08 10:36:23   inference(resolution,[],[f4066,f21])).
+2025-04-08 10:36:23 fof(f21,axiom,(
+2025-04-08 10:36:23   product(b,h,d)),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f4066,plain,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (~product(X0,X1,X2) | product(domain(X0),X1,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f1518,f14])).
+2025-04-08 10:36:23 fof(f1518,plain,(
+2025-04-08 10:36:23   ( ! [X2,X3,X0,X1,X4] : (~product(X0,domain(X1),X2) | ~product(X2,X3,X4) | product(domain(X1),X3,X3)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f37,f27])).
+2025-04-08 10:36:23 fof(f37,plain,(
+2025-04-08 10:36:23   ( ! [X2,X3,X0,X1,X4] : (defined(X0,X1) | ~product(X2,X0,X3) | ~product(X3,X1,X4)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f3,f2])).
+2025-04-08 10:36:23 fof(f7546,plain,(
+2025-04-08 10:36:23   product(c,g,compose(c,h))),
+2025-04-08 10:36:23   inference(backward_demodulation,[],[f5436,f7545])).
+2025-04-08 10:36:23 fof(f7545,plain,(
+2025-04-08 10:36:23   compose(c,h) = compose(c,g)),
+2025-04-08 10:36:23   inference(resolution,[],[f5892,f5855])).
+2025-04-08 10:36:23 fof(f5855,plain,(
+2025-04-08 10:36:23   product(a,d,compose(c,g))),
+2025-04-08 10:36:23   inference(resolution,[],[f5436,f2306])).
+2025-04-08 10:36:23 fof(f2306,plain,(
+2025-04-08 10:36:23   ( ! [X0] : (~product(c,g,X0) | product(a,d,X0)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f1071,f19])).
+2025-04-08 10:36:23 fof(f1071,plain,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (~product(X2,b,X0) | ~product(X0,g,X1) | product(X2,d,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f5,f22])).
+2025-04-08 10:36:23 fof(f22,axiom,(
+2025-04-08 10:36:23   product(b,g,d)),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f5,axiom,(
+2025-04-08 10:36:23   ( ! [X2,X3,X0,X1,X4,X5] : (~product(X1,X2,X4) | ~product(X3,X2,X5) | ~product(X0,X1,X3) | product(X0,X4,X5)) )),
+2025-04-08 10:36:23   file('/vampire/examples/CAT001-1.p',unknown)).
+2025-04-08 10:36:23 fof(f5892,plain,(
+2025-04-08 10:36:23   ( ! [X0] : (~product(a,d,X0) | compose(c,h) = X0) )),
+2025-04-08 10:36:23   inference(resolution,[],[f5830,f18])).
+2025-04-08 10:36:23 fof(f5830,plain,(
+2025-04-08 10:36:23   product(a,d,compose(c,h))),
+2025-04-08 10:36:23   inference(resolution,[],[f5366,f2303])).
+2025-04-08 10:36:23 fof(f2303,plain,(
+2025-04-08 10:36:23   ( ! [X0] : (~product(c,h,X0) | product(a,d,X0)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f1070,f19])).
+2025-04-08 10:36:23 fof(f1070,plain,(
+2025-04-08 10:36:23   ( ! [X2,X0,X1] : (~product(X2,b,X0) | ~product(X0,h,X1) | product(X2,d,X1)) )),
+2025-04-08 10:36:23   inference(resolution,[],[f5,f21])).
+2025-04-08 10:36:23 fof(f5436,plain,(
+2025-04-08 10:36:23   product(c,g,compose(c,g))),
+2025-04-08 10:36:23   inference(resolution,[],[f5390,f1])).
+2025-04-08 10:36:23 fof(f5390,plain,(
+2025-04-08 10:36:23   defined(c,g)),
+2025-04-08 10:36:23   inference(resolution,[],[f5300,f3190])).
+2025-04-08 10:36:23 fof(f5300,plain,(
+2025-04-08 10:36:23   product(domain(b),g,g)),
+2025-04-08 10:36:23   inference(resolution,[],[f4066,f22])).
+2025-04-08 10:36:23 % SZS output end Proof for CAT001-1
+2025-04-08 10:36:23 % ------------------------------
+2025-04-08 10:36:23 % Version: Vampire 4.9 (Release build, commit e0a91a05f on 2025-02-11 21:40:29 +0000)
+2025-04-08 10:36:23 % Termination reason: Refutation
+2025-04-08 10:36:23 
+2025-04-08 10:36:23 % Time elapsed: 0.162 s
+2025-04-08 10:36:23 % Peak memory usage: 13 MB
+2025-04-08 10:36:23 % ------------------------------
+2025-04-08 10:36:23 % ------------------------------
+2025-04-08 10:36:23 % Success in time 82.122 s

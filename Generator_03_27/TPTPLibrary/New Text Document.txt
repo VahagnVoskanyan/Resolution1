@@ -1,0 +1,20 @@
+docker run --rm -it \
+  -v /path/to/local/problems:/problems \
+  -v /path/to/local/results:/results \
+  vampire \
+  /bin/bash -c 'for f in /problems/*.p; do
+    base=$(basename "$f" .p);
+    ./vampire --mode clausify -t 100 "$f" > /results/"${base}"_result.txt;
+  done'
+
+
+docker run --rm -it --name vampire_clausify vampire ./vampire --mode clausify -t 100 /vampire/examples/Problems/ARI001_1.p > C:\Users\vahag\Desktop\BaseFolder\University\Thesis\GitFiles1\Generator_03_27\TPTPLibrary\Output\result.txt"
+
+docker run -it --name vampire_clausify vampire ./vampire --mode clausify -t 100 //vampire/examples/Problems/ARI001_1.p 
+
+docker run --rm -it \
+  vampire \
+  /bin/bash -c 'for f in /vampire/examples/Problems/*.p; do
+    base=$(basename "$f" .p);
+    ./vampire --mode clausify -t 100 "$f" > /vampire/examples/Output/"${base}"_result.txt;
+  done'

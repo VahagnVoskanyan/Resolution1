@@ -6,6 +6,7 @@ from typing import List, Dict, Any, Optional
 from random_generators_gnn_1 import RandomGenerators
 from unification_resolution_gnn_1 import UnificationResolution
 
+# Returns Dataset with best pairs
 class ResolutionDataGenerator:
     def __init__(
         self,
@@ -50,17 +51,24 @@ class ResolutionDataGenerator:
         i: int,
         j: int,
         idxA: int,
-        idxB: int
+        idxB: int,
+        freq_map: Dict[str, int]
     ) -> float:
         """
         Returns a numeric score for resolving clauses[i] and clauses[j] at literal idxA, idxB.
-        The smaller the better, so we'll pick the minimal score as 'best'.
+        
+        - If the resolvent is empty, we return -1000 (lowest/best).
+        - Otherwise, we measure how much the total literal count changes after resolution.
+          Lower is better, so a negative difference (new_total < old_total) indicates a bigger reduction.
+        - If either clause is a unit clause, we subtract a bonus from the score
+          so that "unit-preference" pairs rank more favorably.
+        - a frequency-based term to either reward or penalize certain predicates.
         """
         resolvent = self.resolver.resolve_clauses(clauses[i], clauses[j], idxA, idxB)
         if resolvent is None:
             return float("inf")  # not resolvable => can't use
 
-        # If resolvent is empty => that yields a contradiction => best
+        # Empty resolvent => contradiction => best possible
         if len(resolvent) == 0:
             return -1000.0
 
@@ -78,8 +86,33 @@ class ResolutionDataGenerator:
         new_clauses.append(resolvent)
 
         # sum up all literal counts
-        total_lits = sum(len(cl) for cl in new_clauses)
-        return float(total_lits)
+        #total_lits = sum(len(cl) for cl in new_clauses)
+
+        # Count total literals before and after the resolution
+        old_total = sum(len(c) for c in clauses)
+        new_total = sum(len(c) for c in new_clauses)
+        # Our baseline score is the difference: new_total - old_total (improvement (3))
+        score = (new_total - old_total)
+
+        # ---------- UNIT-PREFERENCE BONUS ---------- (improvement (1))
+        # If either original clause is a unit clause, prefer it by lowering the score
+        if len(clauses[i]) == 1 or len(clauses[j]) == 1:
+            score -= 3.0
+
+        # --- FREQUENCY-BASED BONUS ---  (improvement (4))
+        # Parse the two literals we are resolving and sum up their frequencies
+        litA = clauses[i][idxA]
+        litB = clauses[j][idxB]
+        sA, pA, _ = self.resolver.parse_literal(litA)
+        sB, pB, _ = self.resolver.parse_literal(litB)
+        freqA = freq_map.get(pA, 0)
+        freqB = freq_map.get(pB, 0)
+
+        # If we want to *reward* unifying very frequent predicates:
+        freq_sum = freqA + freqB
+        score -= 0.5 * freq_sum  # tweak 0.5 or any alpha you want
+
+        return score
 
     def generate_dataset_entry(self, min_clauses=3, max_clauses=10) -> Dict[str, Any]:
         """
@@ -92,12 +125,15 @@ class ResolutionDataGenerator:
         n_clauses = random.randint(min_clauses, max_clauses)
         clauses = [self.rgen.generate_random_clause_preemptive() for _ in range(n_clauses)]
 
-        all_pairs = []  # will hold ((i, idxA), (j, idxB), score)
-        # Pairwise check across different clauses
+        # 1) Compute frequencies for these clauses (improvement (4))
+        freq_map = self.compute_predicate_frequencies(clauses)
+
+        all_pairs = []
         for i, j in itertools.combinations(range(n_clauses), 2):
             for idxA in range(len(clauses[i])):
                 for idxB in range(len(clauses[j])):
-                    sc = self.score_resolution_pair(clauses, i, j, idxA, idxB)
+                    # 2) Pass freq_map into the scoring function
+                    sc = self.score_resolution_pair(clauses, i, j, idxA, idxB, freq_map)
                     if sc < float("inf"):
                         all_pairs.append(((i, idxA), (j, idxB), sc))
 
@@ -160,6 +196,18 @@ class ResolutionDataGenerator:
             dataset.append(entry)
         return dataset
     
+    # Frequency-Based Literal Selection Heuristic (improvement (4))
+    def compute_predicate_frequencies(self, clauses: List[List[str]]) -> Dict[str, int]:
+        """
+        Returns a dictionary mapping predicate -> how many times it appears across all clauses.
+        """
+        freq = {}
+        for clause in clauses:
+            for lit in clause:
+                sign, pred, args = self.resolver.parse_literal(lit)
+                freq[pred] = freq.get(pred, 0) + 1
+        return freq
+    
 if __name__ == "__main__":
     generator = ResolutionDataGenerator(seed=2023)
     data = generator.create_dataset(n_examples=800, min_clauses=3, max_clauses=10)
@@ -186,9 +234,9 @@ if __name__ == "__main__":
 
     # dataset = generator.create_dataset(n_examples=5, min_clauses=3, max_clauses=5)
     # Write to a JSONL file
-    with open("toy_gnn_dataset.jsonl", "w") as f:
-        for item in data:
-            f.write(json.dumps(item) + "\n")
+    # with open("toy_gnn_dataset.jsonl", "w") as f:
+    #     for item in data:
+    #         f.write(json.dumps(item) + "\n")
 
     # # Print out the first sample
     # import pprint
