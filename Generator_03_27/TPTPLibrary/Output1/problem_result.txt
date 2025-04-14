@@ -1,0 +1,12 @@
+% Running in auto input_syntax mode. Trying TPTP
+% SZS status CounterSatisfiable for problem
+% # SZS output start Saturation.
+% # SZS output end Saturation.
+% ------------------------------
+% Version: Vampire 4.9 (Release build, commit e0a91a05f on 2025-02-11 21:40:29 +0000)
+% Termination reason: Satisfiable
+
+% Time elapsed: 0.059 s
+% Peak memory usage: 10 MB
+% ------------------------------
+% ------------------------------

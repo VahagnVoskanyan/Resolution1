@@ -1,0 +1,5 @@
+% Running in auto input_syntax mode. Trying TPTP
+% Failed with
+% parse error in "", line 2: name expected (text: Pred1)
+% Trying SMTLIB2
+User error: list expected: %

@@ -10,9 +10,9 @@ command = [
     "--name", "vampire_clausify", "vampire",
     "/bin/bash", "-c",
     (
-        'for f in /vampire/examples/Problems1/*.p; do '
+        'for f in /vampire/examples/Axioms/*.p; do '
         'base=$(basename "$f" .p); '
-        './vampire --proof_extra full -t 100 "$f" > /vampire/examples/Output/"${base}"_result.txt; '
+        './vampire --mode casc --proof_extra full -t 100 "$f" > /vampire/examples/Output/"${base}"_result.txt; '
         'done'
     )
 ]

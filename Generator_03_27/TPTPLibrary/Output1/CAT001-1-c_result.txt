@@ -1,0 +1,257 @@
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% lrs+2_5:39_bsr=unit_only:to=lpo:drc=off:sil=128000:plsq=on:plsqr=2,19:sp=frequency:lcm=reverse:fd=preordered:s2a=on:i=38749:s2at=-1.0:fsr=off:uhcvi=on:rawr=on:aer=off:lwlo=on:add=off:bce=on:acc=model:afr=on_0 on CAT001-1-c for (194ds/38749Mi)
+% Time limit reached! 
+% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Time limit
+% Termination phase: Saturation
+
+% Time elapsed: 19.401 s
+% Peak memory usage: 230 MB
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+WARNING Broken Constraint: if kbo_weight_scheme(inv_frequency) has been set then term_ordering(auto_kbo) is equal to kbo
+% lrs+1002_74:59_drc=off:tgt=full:sos=all:cond=fast:i=124987:kws=inv_frequency:afp=300:afq=2.0744697298148953:rawr=on:urr=full:sil=128000:si=on:rtra=on:random_seed=3250543_0 on CAT001-1-c for (625ds/124987Mi)
+% Time limit reached! 
+% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Time limit
+% Termination phase: Saturation
+
+% Time elapsed: 62.501 s
+% Peak memory usage: 204 MB
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% lrs+11_1:16_to=lpo:drc=off:bsd=on:sp=frequency:i=172350:bs=on:av=off:fsd=on:sil=256000:fdi=50_0 on CAT001-1-c for (180ds/172350Mi)
+% Solution written to "/tmp/vampire-proof-16"
+% Running in auto input_syntax mode. Trying TPTP
+% Refutation found. Thanks to Tanya!
+% SZS status Unsatisfiable for CAT001-1-c
+% SZS output start Proof for CAT001-1-c
+fof(f8052,plain,(
+  $false),
+  inference(subsumption_resolution,[],[f8051,f23])).
+fof(f23,negated_conjecture,(
+  h != g),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f8051,plain,(
+  h = g),
+  inference(resolution,[],[f5960,f7682])).
+fof(f7682,plain,(
+  product(c,g,compose(c,h))),
+  inference(backward_demodulation,[],[f5575,f7681])).
+fof(f7681,plain,(
+  compose(c,h) = compose(c,g)),
+  inference(forward_demodulation,[],[f7510,f7511])).
+fof(f7511,plain,(
+  compose(a,d) = compose(c,g)),
+  inference(resolution,[],[f4113,f5985])).
+fof(f5985,plain,(
+  product(a,d,compose(c,g))),
+  inference(resolution,[],[f5575,f2306])).
+fof(f2306,plain,(
+  ( ! [X0] : (~product(c,g,X0) | product(a,d,X0)) )),
+  inference(resolution,[],[f1071,f19])).
+fof(f19,axiom,(
+  product(a,b,c)),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f1071,plain,(
+  ( ! [X2,X0,X1] : (~product(X2,b,X0) | ~product(X0,g,X1) | product(X2,d,X1)) )),
+  inference(resolution,[],[f5,f22])).
+fof(f22,axiom,(
+  product(b,g,d)),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f5,axiom,(
+  ( ! [X2,X3,X0,X1,X4,X5] : (~product(X1,X2,X4) | ~product(X3,X2,X5) | ~product(X0,X1,X3) | product(X0,X4,X5)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f4113,plain,(
+  ( ! [X0] : (~product(a,d,X0) | compose(a,d) = X0) )),
+  inference(resolution,[],[f4055,f18])).
+fof(f18,axiom,(
+  ( ! [X2,X0,X1,X6] : (~product(X0,X1,X6) | ~product(X0,X1,X2) | X2 = X6) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f4055,plain,(
+  product(a,d,compose(a,d))),
+  inference(resolution,[],[f4042,f1])).
+fof(f1,axiom,(
+  ( ! [X0,X1] : (~defined(X0,X1) | product(X0,X1,compose(X0,X1))) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f4042,plain,(
+  defined(a,d)),
+  inference(resolution,[],[f4016,f3077])).
+fof(f3077,plain,(
+  ( ! [X0,X1] : (~defined(domain(X0),X1) | defined(X0,X1)) )),
+  inference(resolution,[],[f2648,f14])).
+fof(f14,axiom,(
+  ( ! [X0] : (product(X0,domain(X0),X0)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f2648,plain,(
+  ( ! [X2,X3,X0,X1] : (~product(X1,domain(X0),X2) | defined(X1,X3) | ~defined(domain(X0),X3)) )),
+  inference(superposition,[],[f2081,f690])).
+fof(f690,plain,(
+  ( ! [X0] : (domain(X0) = codomain(domain(X0))) )),
+  inference(resolution,[],[f425,f52])).
+fof(f52,plain,(
+  ( ! [X0] : (product(codomain(domain(X0)),domain(X0),codomain(domain(X0)))) )),
+  inference(resolution,[],[f29,f13])).
+fof(f13,axiom,(
+  ( ! [X0] : (defined(codomain(X0),X0)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f29,plain,(
+  ( ! [X0,X1] : (~defined(X0,domain(X1)) | product(X0,domain(X1),X0)) )),
+  inference(resolution,[],[f17,f10])).
+fof(f10,axiom,(
+  ( ! [X0] : (identity_map(domain(X0))) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f17,axiom,(
+  ( ! [X0,X1] : (~identity_map(X1) | ~defined(X0,X1) | product(X0,X1,X0)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f425,plain,(
+  ( ! [X0,X1] : (~product(codomain(X0),X0,X1) | X0 = X1) )),
+  inference(resolution,[],[f18,f15])).
+fof(f15,axiom,(
+  ( ! [X0] : (product(codomain(X0),X0,X0)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f2081,plain,(
+  ( ! [X2,X3,X0,X1] : (~product(X2,codomain(X0),X3) | defined(X2,X1) | ~defined(codomain(X0),X1)) )),
+  inference(resolution,[],[f212,f2])).
+fof(f2,axiom,(
+  ( ! [X2,X0,X1] : (defined(X0,X1) | ~product(X0,X1,X2)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f212,plain,(
+  ( ! [X2,X0,X1] : (~defined(X0,codomain(X1)) | ~defined(codomain(X1),X2) | defined(X0,X2)) )),
+  inference(resolution,[],[f9,f11])).
+fof(f11,axiom,(
+  ( ! [X0] : (identity_map(codomain(X0))) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f9,axiom,(
+  ( ! [X2,X0,X1] : (~identity_map(X1) | ~defined(X0,X1) | ~defined(X1,X2) | defined(X0,X2)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f4016,plain,(
+  defined(domain(a),d)),
+  inference(resolution,[],[f3980,f3033])).
+fof(f3033,plain,(
+  ( ! [X0] : (~product(X0,b,b) | defined(X0,d)) )),
+  inference(resolution,[],[f3022,f21])).
+fof(f21,axiom,(
+  product(b,h,d)),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f3022,plain,(
+  ( ! [X2,X0,X1] : (~product(X1,h,X2) | ~product(X0,X1,b) | defined(X0,X2)) )),
+  inference(resolution,[],[f817,f21])).
+fof(f817,plain,(
+  ( ! [X2,X3,X0,X1,X4,X5] : (~product(X3,X4,X5) | ~product(X0,X2,X3) | ~product(X2,X4,X1) | defined(X0,X1)) )),
+  inference(resolution,[],[f4,f2])).
+fof(f4,axiom,(
+  ( ! [X2,X3,X0,X1,X4] : (~defined(X3,X2) | defined(X0,X4) | ~product(X0,X1,X3) | ~product(X1,X2,X4)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f3980,plain,(
+  product(domain(a),b,b)),
+  inference(resolution,[],[f3972,f32])).
+fof(f32,plain,(
+  ( ! [X2,X0,X1] : (~product(domain(X0),X1,X2) | product(domain(X0),X1,X1)) )),
+  inference(resolution,[],[f27,f2])).
+fof(f27,plain,(
+  ( ! [X0,X1] : (~defined(domain(X0),X1) | product(domain(X0),X1,X1)) )),
+  inference(resolution,[],[f16,f10])).
+fof(f16,axiom,(
+  ( ! [X0,X1] : (~identity_map(X0) | ~defined(X0,X1) | product(X0,X1,X1)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f3972,plain,(
+  product(domain(a),b,compose(domain(a),b))),
+  inference(resolution,[],[f3966,f14])).
+fof(f3966,plain,(
+  ( ! [X0,X1] : (~product(X0,X1,a) | product(X1,b,compose(X1,b))) )),
+  inference(resolution,[],[f1517,f19])).
+fof(f1517,plain,(
+  ( ! [X2,X3,X0,X1,X4] : (~product(X2,X3,X4) | ~product(X0,X1,X2) | product(X1,X3,compose(X1,X3))) )),
+  inference(resolution,[],[f37,f1])).
+fof(f37,plain,(
+  ( ! [X2,X3,X0,X1,X4] : (defined(X0,X1) | ~product(X2,X0,X3) | ~product(X3,X1,X4)) )),
+  inference(resolution,[],[f3,f2])).
+fof(f3,axiom,(
+  ( ! [X2,X3,X0,X1] : (~defined(X3,X2) | defined(X1,X2) | ~product(X0,X1,X3)) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f7510,plain,(
+  compose(a,d) = compose(c,h)),
+  inference(resolution,[],[f4113,f5958])).
+fof(f5958,plain,(
+  product(a,d,compose(c,h))),
+  inference(resolution,[],[f5504,f2303])).
+fof(f2303,plain,(
+  ( ! [X0] : (~product(c,h,X0) | product(a,d,X0)) )),
+  inference(resolution,[],[f1070,f19])).
+fof(f1070,plain,(
+  ( ! [X2,X0,X1] : (~product(X2,b,X0) | ~product(X0,h,X1) | product(X2,d,X1)) )),
+  inference(resolution,[],[f5,f21])).
+fof(f5504,plain,(
+  product(c,h,compose(c,h))),
+  inference(resolution,[],[f5463,f1])).
+fof(f5463,plain,(
+  defined(c,h)),
+  inference(resolution,[],[f5436,f3189])).
+fof(f3189,plain,(
+  ( ! [X0,X1] : (~product(domain(b),X0,X1) | defined(c,X0)) )),
+  inference(superposition,[],[f3108,f1286])).
+fof(f1286,plain,(
+  domain(c) = domain(b)),
+  inference(resolution,[],[f415,f363])).
+fof(f363,plain,(
+  product(domain(c),domain(b),domain(b))),
+  inference(resolution,[],[f32,f67])).
+fof(f67,plain,(
+  product(domain(c),domain(b),domain(c))),
+  inference(resolution,[],[f64,f50])).
+fof(f50,plain,(
+  ( ! [X2,X0,X1] : (~product(X2,X0,X1) | product(X0,domain(X1),X0)) )),
+  inference(resolution,[],[f29,f36])).
+fof(f36,plain,(
+  ( ! [X2,X0,X1] : (defined(X0,domain(X1)) | ~product(X2,X0,X1)) )),
+  inference(resolution,[],[f3,f12])).
+fof(f12,axiom,(
+  ( ! [X0] : (defined(X0,domain(X0))) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+fof(f64,plain,(
+  product(b,domain(c),b)),
+  inference(resolution,[],[f50,f19])).
+fof(f415,plain,(
+  ( ! [X0] : (~product(domain(c),domain(b),X0) | domain(c) = X0) )),
+  inference(resolution,[],[f18,f67])).
+fof(f3108,plain,(
+  ( ! [X2,X0,X1] : (~product(domain(X0),X1,X2) | defined(X0,X1)) )),
+  inference(resolution,[],[f3077,f2])).
+fof(f5436,plain,(
+  product(domain(b),h,h)),
+  inference(resolution,[],[f4517,f21])).
+fof(f4517,plain,(
+  ( ! [X2,X0,X1] : (~product(X0,X1,X2) | product(domain(X0),X1,X1)) )),
+  inference(resolution,[],[f1518,f14])).
+fof(f1518,plain,(
+  ( ! [X2,X3,X0,X1,X4] : (~product(X0,domain(X1),X2) | ~product(X2,X3,X4) | product(domain(X1),X3,X3)) )),
+  inference(resolution,[],[f37,f27])).
+fof(f5575,plain,(
+  product(c,g,compose(c,g))),
+  inference(resolution,[],[f5514,f1])).
+fof(f5514,plain,(
+  defined(c,g)),
+  inference(resolution,[],[f5437,f3189])).
+fof(f5437,plain,(
+  product(domain(b),g,g)),
+  inference(resolution,[],[f4517,f22])).
+fof(f5960,plain,(
+  ( ! [X0] : (~product(c,X0,compose(c,h)) | h = X0) )),
+  inference(resolution,[],[f5504,f20])).
+fof(f20,axiom,(
+  ( ! [X8,X9,X7] : (~product(c,X8,X9) | ~product(c,X7,X9) | X7 = X8) )),
+  file('/vampire/examples/CAT001-1-c.p',unknown)).
+% SZS output end Proof for CAT001-1-c
+% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation
+
+% Time elapsed: 0.120 s
+% Peak memory usage: 13 MB
+% ------------------------------
+% ------------------------------
+% Success in time 82.049 s

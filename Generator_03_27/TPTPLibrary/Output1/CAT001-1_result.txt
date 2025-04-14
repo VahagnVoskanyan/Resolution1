@@ -1,0 +1,5 @@
+% Running in auto input_syntax mode. Trying TPTP
+% Failed with
+% User error: cannot open file /vampire/build/Axioms/CAT001-0.ax (detected at or around line 28)
+% Trying SMTLIB2
+Parser exception: unmatched left parenthesis in line 47 at 

@@ -125,12 +125,16 @@ def generate_problem(axioms_folder):
 
 if __name__ == "__main__":
     axioms_folder = "Axioms"  # Ensure this folder exists and contains your TPTP axiom files.
-    try:
-        problem = generate_problem(axioms_folder)
-        # Save the generated problem to a file.
-        with open("generated_problem.p", "w") as f:
-            f.write(problem)
-        print("Generated TPTP problem:")
-        print(problem)
-    except Exception as e:
-        print("Error:", e)
+    output_folder = "Problems"
+    for i in range(10):
+        try:
+            problem = generate_problem(axioms_folder)
+            file_path = os.path.join(output_folder, f"generated_problem_{i}.p")
+            # Save the generated problem to the file
+            with open(file_path, "w") as f:
+                f.write(problem)
+
+            print(f"Generated TPTP problem: problem_{i}")
+            #print(problem)
+        except Exception as e:
+            print("Error:", e)

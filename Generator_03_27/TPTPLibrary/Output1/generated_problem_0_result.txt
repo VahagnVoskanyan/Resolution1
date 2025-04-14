@@ -1,0 +1,119 @@
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% lrs-1011_16:31_bsr=on:tgt=full:sp=unary_first:acc=on:updr=off:nicw=on:i=134284:sil=256000:si=on:rtra=on:to=lpo:spb=goal_then_units:nwc=5.23:urr=on:lwlo=on:fdi=20:fsd=on_0 on generated_problem_0 for (672ds/134284Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.009 s
+% Peak memory usage: 10 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% ott+1011_1:3_sil=256000:bsd=on:sp=occurrence:sos=on:newcnf=on:i=214065:afp=1:aac=none:amm=off:afq=3.64962_0 on generated_problem_0 for (999ds/214065Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.003 s
+% Peak memory usage: 10 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% lrs+1010_2201:262144_anc=all:sil=256000:sims=off:sp=frequency:spb=goal_then_units:rp=on:lwlo=on:st=3.0:i=231451:bs=unit_only:nm=6:ins=2:fsd=on:ss=axioms:sgt=16:afr=on:tgt=ground:acc=on:ccuc=first_0 on generated_problem_0 for (999ds/231451Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.001 s
+% Peak memory usage: 9 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+WARNING Broken Constraint: if demodulation_redundancy_check(ordering) has been set then forward_demodulation(off) is not equal to off or backward_demodulation(off) is not equal to off
+% dis+1011_1:1_drc=ordering:to=lpo:sil=4000:sp=const_max:sos=all:spb=goal:st=1.5:i=103:av=off:ss=axioms:sfv=off:bd=off:sd=2:fd=off_0 on generated_problem_0 for (1ds/103Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.001 s
+% Peak memory usage: 8 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+WARNING Broken Constraint: if demodulation_redundancy_check(ordering) has been set then forward_demodulation(off) is not equal to off or backward_demodulation(off) is not equal to off
+% dis-1002_1:2_drc=ordering:sil=4000:i=110:nm=2:ins=3:bd=off:fsr=off:rp=on:to=lpo:nwc=5.0:fd=off:sfv=off:fs=off_0 on generated_problem_0 for (1ds/110Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.003 s
+% Peak memory usage: 10 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% lrs+1011_1:1_drc=ordering:sil=32000:rnwc=on:nwc=10.0:lwlo=on:i=107:bd=off:av=off_0 on generated_problem_0 for (1ds/107Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.002 s
+% Peak memory usage: 9 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+WARNING Broken Constraint: if kbo_weight_scheme(arity_squared) has been set then term_ordering(auto_kbo) is equal to kbo
+% lrs-1011_4:7_drc=ordering:sil=2000:tgt=full:bsd=on:spb=goal:nwc=5.0:updr=off:newcnf=on:i=121:kws=arity_squared:rawr=on:bsdmm=2_0 on generated_problem_0 for (1ds/121Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.002 s
+% Peak memory usage: 10 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% lrs-21_1:1_drc=ordering:sil=4000:sos=on:lcm=predicate:i=107:sd=2:ss=axioms_0 on generated_problem_0 for (1ds/107Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.001 s
+% Peak memory usage: 9 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% lrs+1011_1166409:524288_bsr=unit_only:to=lpo:drc=off:sil=2000:fde=unused:avsql=on:etr=on:sp=occurrence:spb=goal_then_units:lsd=50:rp=on:nwc=6.05391:avsqc=5:sac=on:newcnf=on:avsq=on:i=132:bs=unit_only:afp=300:aac=none:avsqr=13677,1048576:nm=0:ins=3:fsr=off:fsd=on:afq=4.16901:uhcvi=on:afr=on:rawr=on:fsdmm=3:gsp=on_0 on generated_problem_0 for (1ds/132Mi)
+% Refutation not found, incomplete strategy% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation not found, incomplete strategy
+
+% Time elapsed: 0.003 s
+% Peak memory usage: 10 MB
+% ------------------------------
+% ------------------------------
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% dis-1010_1:12_drc=ordering:sil=2000:sims=off:bce=on:nwc=2.0:newcnf=on:s2a=on:i=150:s2at=2.0:bd=off:fsr=off:irw=on:alpa=false:rawr=on:sp=occurrence_0 on generated_problem_0 for (1ds/150Mi)
+% Solution written to "/tmp/vampire-proof-8"
+% Running in auto input_syntax mode. Trying TPTP
+% SZS status CounterSatisfiable for generated_problem_0
+% # SZS output start Saturation.
+% # SZS output end Saturation.
+% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Satisfiable
+
+% Time elapsed: 0.0000 s
+% Peak memory usage: 10 MB
+% ------------------------------
+% ------------------------------
+% Success in time 0.068 s

@@ -210,7 +210,7 @@ class ResolutionDataGenerator:
     
 if __name__ == "__main__":
     generator = ResolutionDataGenerator(seed=2023)
-    data = generator.create_dataset(n_examples=800, min_clauses=3, max_clauses=10)
+    data = generator.create_dataset(n_examples=8000, min_clauses=3, max_clauses=10)
 
     # Count how many entries have a valid best_pair (i.e., not None)
     valid_best_pair_count = sum(1 for entry in data if entry["best_pair"] is not None)
@@ -234,9 +234,9 @@ if __name__ == "__main__":
 
     # dataset = generator.create_dataset(n_examples=5, min_clauses=3, max_clauses=5)
     # Write to a JSONL file
-    # with open("toy_gnn_dataset.jsonl", "w") as f:
-    #     for item in data:
-    #         f.write(json.dumps(item) + "\n")
+    with open("toy_gnn_dataset.jsonl", "w") as f:
+        for item in data:
+            f.write(json.dumps(item) + "\n")
 
     # # Print out the first sample
     # import pprint

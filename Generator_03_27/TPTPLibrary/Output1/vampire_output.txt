@@ -1,0 +1,11 @@
+fof(f1071,plain,(
+  ( ! [X2,X0,X1] : (~product(X2,b,X0) | ~product(X0,g,X1) | product(X2,d,X1)) )),
+  inference(resolution,[],[f5,f22])).
+  
+fof(f19,axiom,(
+  product(a,b,c)),
+  file('/vampire/examples/CAT001-1.p',unknown)).
+  
+fof(f2306,plain,(
+  ( ! [X0] : (~product(c,g,X0) | product(a,d,X0)) )),
+  inference(resolution,[],[f1071,f19])).

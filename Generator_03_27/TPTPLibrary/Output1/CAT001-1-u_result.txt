@@ -1,0 +1,5 @@
+% Running in auto input_syntax mode. Trying TPTP
+% Failed with
+% parse error in "", line 1: wrong number format
+% Trying SMTLIB2
+Lexer exception: incorrect number format in 1. in line 1
