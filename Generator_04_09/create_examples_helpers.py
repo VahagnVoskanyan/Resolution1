@@ -36,6 +36,7 @@ def parse_tptp_clauses(filePath):
         literal_set = set(literals)
         
         clauses.append((name, role, literal_set))
+        print(clauses[-1])
     
     return clauses
 
@@ -59,12 +60,29 @@ def negate_literal(literal: str) -> str:
         if sign > 0:
             # Positive literal: add a negation.
             if args:
-                return f"~{pred}({', '.join(args)})"
+                return f"~{pred}({','.join(args)})"
             else:
                 return f"~{pred}"
         else:
             # Negative literal: remove the negation.
             if args:
-                return f"{pred}({', '.join(args)})"
+                return f"{pred}({','.join(args)})"
             else:
                 return pred
+
+def write_to_tptp(clauses, filePath):
+    """
+    Converts a list of clauses in the internal representation (tuples: (name, role, clause))
+    to a TPTP-formatted file.
+
+    Each clause is written as:
+      cnf(name, role, (L1 | L2 | ... )).
+    """
+    with open(filePath, 'w') as f:
+        for name, role, clause in clauses:
+            # Join literals with disjunction
+            # Sorting is optional but can make the output consistent.
+            disjunction = " | ".join(sorted(clause))
+            line = f"cnf({name}, {role}, ({disjunction})).\n"
+            f.write(line)
+        

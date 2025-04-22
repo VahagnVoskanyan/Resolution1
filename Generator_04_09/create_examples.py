@@ -1,8 +1,10 @@
 import random, math
 import numpy as np
+import json
 
+import run_comnnads_solve
 from unification_resolution import UnificationResolution
-from create_examples_helpers import negate_literal, parse_tptp_clauses
+from create_examples_helpers import negate_literal, parse_tptp_clauses, write_to_tptp
 
 
 def all_resolvents(C1, C2):
@@ -107,6 +109,7 @@ def generate_problem(axioms, N=10, T=5.0):
     for ncl in negated:
         i += 1
         problem.append((f'goal_{i}', 'negated_conjecture', ncl))
+    
     return problem
 
 # #Пример использования:
@@ -123,28 +126,42 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    axioms = parse_tptp_clauses('Axioms_clausified/CAT001-0.ax_claused.txt')
+    fileName = "CAT001-0"
+    axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    # C_final = forward_propose(axioms)
-    # print("-------------")
-    # print(C_final)
+    for k in range(100):
+        N=10
+        T=5.0
+        problem = generate_problem(axioms, N, T)
 
-    # negated = negate_clause(C_final)
-    # print("-------------")
-    # print(negated)
+        from generate_dataset import find_candidate_resolvable_pairs
+        resolvable_pairs = find_candidate_resolvable_pairs(problem)
 
-     
+        json_filename = f'Res_Pairs/gen_problem_{fileName}_N={N}_T={T}_{k}_rs.jsonl'
 
-# # Load axioms from TPTP file
-# axioms = parse_tptp_clauses('Axioms_clausified/NUM005+1.ax_claused.txt')
+        with open(json_filename, "w") as fp:
+            fp.write(json.dumps(resolvable_pairs) + "\n")
+        print(f"wrote {json_filename}")
 
-# # Create an instance of the resolution engine
-# resolver = UnificationResolution()
+        # with open(json_filename, 'w') as fp:
+        #     fp.write(json.dumps({"clauses": resolvable_pairs["clauses"]}) + "\n")
+        #     for candidate in resolvable_pairs["resolvable_pairs"]:
+        #         fp.write(json.dumps(candidate) + "\n")
+        #     fp.write(json.dumps({"best_pair": resolvable_pairs["best_pair"]}))
+            #json.dump(resolvable_pairs, fp)
 
-# # Example: try to resolve two clauses from the axioms
-# clause1 = next(cl for _, role, cl in axioms if role == 'axiom')[2]  # Get the literal set from the first axiom
-# clause2 = next(cl for _, role, cl in axioms if role == 'axiom')[2]  # Get the literal set from the second axiom
+        ###
+        # from generate_dataset import serializa_clauses
+        # ser_clauses = serializa_clauses(problem)
 
-# resolvents = resolver.all_resolvents(clause1, clause2)
-# for res in resolvents:
-#     print(res)
+        # json_filename = f'dataset/gen_problem_clauses_{fileName}_N={N}_T={T}_{k}.jsonl'
+
+        # with open(json_filename, 'w') as fp:
+        #      json.dump(ser_clauses, fp)
+        ###
+
+        write_to_tptp(problem, f'Gen_Problems/gen_problem_{fileName}_N={N}_T={T}_{k}.p')
+
+        # Slows down everything
+        #run_comnnads_solve.run_docker_solve_command()
+
