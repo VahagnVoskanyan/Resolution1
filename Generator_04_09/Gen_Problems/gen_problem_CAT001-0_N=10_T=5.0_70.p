@@ -16,8 +16,9 @@ cnf(u15, axiom, (product(codomain(X0),X0,X0))).
 cnf(u16, axiom, (product(X0,X1,X1) | ~defined(X0,X1) | ~identity_map(X0))).
 cnf(u17, axiom, (product(X0,X1,X0) | ~defined(X0,X1) | ~identity_map(X1))).
 cnf(u18, axiom, (X2 = X6 | ~product(X0,X1,X2) | ~product(X0,X1,X6))).
-cnf(goal_1, negated_conjecture, (product(X1,domain(X1),X1))).
-cnf(goal_2, negated_conjecture, (defined(X1,X1))).
-cnf(goal_3, negated_conjecture, (identity_map(X1))).
-cnf(goal_4, negated_conjecture, (product(X1,X1,X1))).
-cnf(goal_5, negated_conjecture, (~defined(X1,X1))).
+cnf(goal_1, negated_conjecture, (defined(X5,codomain(X5)))).
+cnf(goal_2, negated_conjecture, (~product(X5,X5,compose(X0,X1)))).
+cnf(goal_3, negated_conjecture, (product(X0,X4,X5))).
+cnf(goal_4, negated_conjecture, (defined(X5,X5))).
+cnf(goal_5, negated_conjecture, (product(X5,codomain(X5),X4))).
+cnf(goal_6, negated_conjecture, (product(X0,X5,X5))).
