@@ -10,7 +10,7 @@ def run_docker_solve_command():
         "docker", "run", "-it", "--rm",
         "-v", f"{input_dir}:/vampire/examples/Gen_Problems",
         "-v", f"{output_dir}:/vampire/examples/Output",
-        "--name", "vampire_clausify", "vampire",
+        "--name", "vampire_solve", "vahagn22/vampire",
         "/bin/bash", "-c",
         (
             'for f in /vampire/examples/Gen_Problems/*.p; do '

@@ -126,14 +126,14 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    #fileName = "CAT001-0"
+    fileName = "CAT001-0"
     #fileName = "CAT002-0"
-    fileName = "CAT003-0"
+    #fileName = "CAT003-0"
     axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    for k in range(100):
+    for k in range(10000):
         N=10
-        T=5.0
+        T=8.0
         problem = generate_problem(axioms, N, T)
 
         from generate_dataset import find_candidate_resolvable_pairs
