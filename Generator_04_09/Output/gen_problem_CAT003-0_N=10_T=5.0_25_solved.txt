@@ -1,0 +1,24 @@
+% Running in auto input_syntax mode. Trying TPTP
+% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time
+% ott+4_40_drc=ordering:av=off:bce=on:fsd=off:fde=unused:nm=4:nwc=1.1:sos=all:sp=frequency:i=69040_0 on gen_problem_CAT003-0_N=10_T=5.0_25 for (346ds/69040Mi)
+% Solution written to "/tmp/vampire-proof-98"
+% Running in auto input_syntax mode. Trying TPTP
+% Refutation found. Thanks to Tanya!
+% SZS status Unsatisfiable for gen_problem_CAT003-0_N=10_T=5.0_25
+% SZS output start Proof for gen_problem_CAT003-0_N=10_T=5.0_25
+fof(f20,plain,(
+  $false),
+  inference(equality_resolution,[],[f18])).
+fof(f18,negated_conjecture,(
+  ( ! [X0,X1] : (X0 != X1) )),
+  file('/vampire/examples/Gen_Problems/gen_problem_CAT003-0_N=10_T=5.0_25.p',unknown)).
+% SZS output end Proof for gen_problem_CAT003-0_N=10_T=5.0_25
+% ------------------------------
+% Version: Vampire 4.9 (Release build, commit 1d65d6cd7 on 2025-04-08 23:52:25 +0100)
+% Termination reason: Refutation
+
+% Time elapsed: 0.0000 s
+% Peak memory usage: 8 MB
+% ------------------------------
+% ------------------------------
+% Success in time 0.01 s

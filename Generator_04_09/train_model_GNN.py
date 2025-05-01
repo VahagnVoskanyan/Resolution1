@@ -1,8 +1,5 @@
 import argparse
-import glob
-import json
-import os
-import random
+import glob, json, re, os, random
 from typing import Dict, List, Any, Sequence
 
 import torch
@@ -136,7 +133,19 @@ class ClauseResolutionDataset(Dataset):
     ):
         super().__init__(root=None)
         self.max_args = max_args
-        self.predicate_to_idx = {p: i + 1 for i, p in enumerate(predicate_list)}
+        if predicate_list:
+            pred_list = predicate_list
+        else:
+            # auto-collect from the dataset
+            seen = {}
+            for ex in examples:
+                for _cid, _ctype, lits in ex["clauses"]:
+                    for lit in lits:
+                        m = re.match(r'\s*[~¬]?\s*([A-Za-z0-9_]+)\(', lit)
+                        if m and m.group(1) not in seen:
+                            seen[m.group(1)] = None
+            pred_list = list(seen)
+        self.predicate_to_idx = {p: i + 1 for i, p in enumerate(pred_list)}
 
         examples: List[Dict[str, Any]] = []
         for p in paths:
@@ -289,7 +298,11 @@ if __name__ == "__main__":
 # print(f"Merged → {out}")
 
 # Train from scratch on every JSONL in the current directory
-#python train_,model.py --data . --epochs 20 --lr 1e-3
+#python train_model_GNN.py --data Res_Pairs --epochs 20 --lr 1e-3 --checkpoint Models/gnn_model.pt
 
 # Fine‑tune the SAME checkpoint on a *new* directory
-#python train_,model.py --data new_dataset_dir --epochs 5 --lr 1e-4 --checkpoint Models/gnn_model.pt
+#python train_model_GNN.py --data Res_Pairs --epochs 5 --lr 1e-4 --checkpoint Models/gnn_model.pt
+
+
+# Predicate Names
+#product defined identity_map domain codomain compose equivalent there_exists f1
