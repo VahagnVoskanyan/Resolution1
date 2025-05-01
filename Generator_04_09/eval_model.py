@@ -94,4 +94,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-#python eval_model.py --data Res_Pairs --checkpoint Models/gnn_model1.pt --predicates defined product compose codomain identity_map
+#python eval_model.py --data Test_Res_Pairs --checkpoint Models/gnn_model1.pt --predicates convergent_lines unorthogonal_lines

@@ -129,7 +129,7 @@ if __name__ == '__main__':
     fileName = "GEO006+4"
     axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    for k in range(100):
+    for k in range(1000):
         N=10
         T=8.0
         problem = generate_problem(axioms, N, T)
