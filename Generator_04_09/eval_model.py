@@ -22,16 +22,20 @@ def edge_accuracy(model, loader, device):
 
 
 def hits_at_1(model, dataset, device):
+    """Return the fraction of graphs whose top-scored edge is a gold edge.
+       Works even if there are multiple gold edges (e.g. forward + backward)."""
     loader = DataLoader(dataset, batch_size=1, shuffle=False)
-    ok = 0
+    good = 0
     with torch.no_grad():
         for data in loader:
             data = data.to(device)
-            logits = model(data.x, data.edge_index)[:, 1]        # class-1 score
-            best_edge = logits.argmax().item()
-            gold_edge = (data.y == 1).nonzero(as_tuple=True)[0].item()
-            ok += int(best_edge == gold_edge)
-    return ok / len(dataset)
+            # class-1 logit for every edge
+            scores = model(data.x, data.edge_index)[:, 1]
+            top_edge = scores.argmax().item()
+            gold_edges = (data.y == 1).nonzero(as_tuple=True)[0]   # may be >1
+            good += int(top_edge in gold_edges)
+    return good / len(dataset)
+
 
 
 def prf1(model, loader, device):
@@ -90,5 +94,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-#python eval_model.py --data Test_Res_Pairs --checkpoint Models/gnn_model1.pt 
-# --predicates defined product compose codomain identity_map
+#python eval_model.py --data Res_Pairs --checkpoint Models/gnn_model1.pt --predicates defined product compose codomain identity_map
