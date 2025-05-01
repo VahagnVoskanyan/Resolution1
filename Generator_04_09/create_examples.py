@@ -126,7 +126,7 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    #fileName = "CAT001-0"
+    fileName = "CAT001-0"
     #fileName = "CAT002-0"
     #fileName = "CAT003-0"
     fileName = "CAT004-0"
