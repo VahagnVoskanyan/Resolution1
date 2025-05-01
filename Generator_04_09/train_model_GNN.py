@@ -83,26 +83,39 @@ def build_graph_from_example(
         i, a = pair["clauseA_index"], pair["literalA_index"]
         j, b = pair["clauseB_index"], pair["literalB_index"]
 
+        # ── skip malformed pairs ───────────────────────────────
+        if a is None or b is None:
+            continue
+        if (i, a) not in node_map or (j, b) not in node_map:
+            continue
+        # ───────────────────────────────────────────────────────
+
         src, dst = node_map[(i, a)], node_map[(j, b)]
         edge_src.append(src)
         edge_dst.append(dst)
 
-        is_best = best_pair is not None and (
-            i == best_pair["clauseA_index"]
+        is_best = (
+            best_pair is not None
+            and best_pair.get("literalA_index") is not None
+            and best_pair.get("literalB_index") is not None
+            and i == best_pair["clauseA_index"]
             and a == best_pair["literalA_index"]
             and j == best_pair["clauseB_index"]
             and b == best_pair["literalB_index"]
         )
         labels.append(1 if is_best else 0)
 
-        # add the reversed edge (resolution is symmetric)
-        edge_src.append(dst)
-        edge_dst.append(src)
-        labels.append(1 if is_best else 0)
+    # reversed edge
+    edge_src.append(dst)
+    edge_dst.append(src)
+    labels.append(1 if is_best else 0)
 
     edge_index = torch.tensor([edge_src, edge_dst], dtype=torch.long)
     y          = torch.tensor(labels, dtype=torch.long)
 
+    if len(labels) == 0:
+        print("⚠️  example", example.get("problem_id", "<unknown>"),
+              "had no valid edges after cleaning.")
     return Data(x=x, edge_index=edge_index, y=y)
 
 
@@ -298,7 +311,7 @@ if __name__ == "__main__":
 # print(f"Merged → {out}")
 
 # Train from scratch on every JSONL in the current directory
-#python train_model_GNN.py --data Res_Pairs --epochs 20 --lr 1e-3 --checkpoint Models/gnn_model.pt
+#python train_model_GNN.py --data Res_Pairs --epochs 30 --lr 1e-3 --checkpoint Models/gnn_model1.pt
 
 # Fine‑tune the SAME checkpoint on a *new* directory
 #python train_model_GNN.py --data Res_Pairs --epochs 5 --lr 1e-4 --checkpoint Models/gnn_model.pt
