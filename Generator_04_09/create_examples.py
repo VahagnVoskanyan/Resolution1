@@ -2,16 +2,15 @@ import random, math
 import numpy as np
 import json
 
-import run_comnnads_solve
 from unification_resolution import UnificationResolution
 from create_examples_helpers import negate_literal, parse_tptp_clauses, write_to_tptp
 
 
 def all_resolvents(C1, C2):
     """
-    Возвращает список [ new_clause, ... ] — результат резолюции между C1 и C2.
-    Предполагаем, что C1, C2 — множества литералов вида { L1, L2, ... }.
-    Игнорируем superposition: '=' трактуем как обычный предикат eq(t1,t2).
+    Returns a list [new_clause, ...] — the result of the resolution between C1 and C2.
+    We assume that C1 and C2 are sets of literals of the form { L1, L2, ... }.
+    We ignore superposition: '=' is treated as an ordinary predicate eq(t1, t2).
     """
     resolvents = []
 
@@ -41,12 +40,12 @@ def all_resolvents(C1, C2):
 
 def forward_propose(axioms, N=10, temperature=5.0):
     """
-    Генерирует линейную цепочку C0..C_N и возвращает последнюю клаузу C_N.
-    
-    :param axioms: список троек (name, role, set_of_literals), полученных из parse_tptp_clauses
-    :param N: количество шагов (глубина цепочки)
-    :param temperature: параметр для softmax-взвешивания по размеру клаузы
-    :return: конечная клауза (набор литералов), которая будет выступать в качестве утверждения (conjecture)
+    Generates a linear chain of clauses C0..C_N and returns the last clause C_N.
+
+    :param axioms: a list of triples (name, role, set_of_literals), obtained from parse_tptp_clauses  
+    :param N: the number of steps (chain depth)  
+    :param temperature: a parameter for softmax-weighting by clause size  
+    :return: the final clause (a set of literals), which will serve as the conject
     """
     # Берём все аксиомные клаузы (роль 'axiom')
     known_clauses = [cl for (_, role, cl) in axioms if role == 'axiom']
@@ -94,8 +93,8 @@ def negate_clause(clause: set) -> list:
 
 def generate_problem(axioms, N=10, T=5.0):
     """
-    Генерируем одну задачу: axioms + neg(C_N).
-    Возвращает список клауз (axiom + negated_conjecture).
+    Generates a single problem: axioms + neg(C_N).  
+    Returns a list of clauses (axioms + negated_conjecture).  
     """
     C_final = forward_propose(axioms, N, T)
     negated = negate_clause(C_final)
@@ -126,15 +125,15 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    fileName = "GEO006+4"
+    fileName = "CAT001-0"
     axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    for k in range(1000):
-        N=10
+    for k in range(10):
+        N=20
         T=8.0
         problem = generate_problem(axioms, N, T)
 
-        from generate_dataset import find_candidate_resolvable_pairs
+        from resolvable_pair_extractor import find_candidate_resolvable_pairs
         resolvable_pairs = find_candidate_resolvable_pairs(problem)
 
         json_filename = f'Res_Pairs/gen_problem_{fileName}_N={N}_T={T}_{k}_rs.jsonl'

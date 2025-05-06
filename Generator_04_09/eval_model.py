@@ -3,7 +3,7 @@ from torch_geometric.loader import DataLoader
 from train_model_GNN import (
     ClauseResolutionDataset,
     EdgeClassifierGNN,
-    build_graph_from_example,      # only needed if you changed the import path
+    build_graph_from_example,      # only needed if we changed the import path
 )
 
 # ---------- metrics helpers ---------------------------------
@@ -86,7 +86,7 @@ def main():
     hit1 = hits_at_1(model, dataset, device)
     p,r,f = prf1(model, loader, device)
 
-    print(f"\nEdge accuracy : {acc:.3%}")
+    #print(f"\nEdge accuracy : {acc:.3%}")
     print(f"Hits@1       : {hit1:.3%}")
     print(f"Positive edge – precision {p:.3%} | recall {r:.3%} | F1 {f:.3%}")
 
