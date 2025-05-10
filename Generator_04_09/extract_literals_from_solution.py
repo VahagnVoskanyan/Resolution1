@@ -108,23 +108,58 @@ def extract_clause_text(solved_text, clause_id):
     return role, clause_body
 
 
-def normalize_clause(clause_text):
+def normalize_clause(clause_text) -> set[str]:
     """
-    Strip outer quantifiers/parens and return a *set* of literals.
-    Example             →  ~p(X)|q(Y)
-    (order & whitespace are irrelevant for equality testing)
+    Return a set of predicate fingerprints like  'pred' or '~pred'
+    (sign + predicate name, arguments discarded).  Robust against
+    extra parentheses, empty literals, infix '=', and TPTP built‑ins.
     """
     txt = clause_text.strip()
 
-    # strip universal quantifier if present
-    m = re.match(r"^\(\s*!\s*\[[^\]]+\]\s*:\s*\(\s*(.*)\s*\)\s*\)\s*$", txt, re.DOTALL)
-    if m:
-        body = m.group(1)
-    else:
-        body = txt[1:-1] if txt.startswith('(') and txt.endswith(')') else txt
+    # ── Remove outer (quantifiers …) and all whitespace ───────────────────────
+    quant_pat = r"^\(\s*!\s*\[[^\]]*\]\s*:\s*\(\s*(.*)\s*\)\s*\)\s*$"
+    m = re.match(quant_pat, txt, re.DOTALL)
+    body = m.group(1) if m else txt
+    body = re.sub(r"\s+", "", body)        # drop all blanks
 
-    body = re.sub(r"\s+", "", body)  # drop all whitespace
-    return set(body.split('|'))
+    # ── Split on disjunction ─────────────────────────────────────────────────
+    raw_lits = [lit for lit in body.split('|') if lit]   # ignore empty pieces
+    fingerprints = []
+
+    for lit in raw_lits:
+        lit = lit.strip('()')               # remove outer parentheses
+        sign = '~' if lit.startswith('~') else ''
+        core = lit[1:] if sign else lit     # drop the '~' for the regex
+
+        # equality in infix form  X=Y  → pretend predicate 'eq'
+        if '=' in core and not core.startswith('$'):
+            pred = 'eq'
+        else:
+            m_pred = re.match(r'([A-Za-z_$][A-Za-z0-9_$]*)', core)
+            if not m_pred:
+                # Something exotic (numbers only, empty, etc.) – skip it
+                continue
+            pred = m_pred.group(1).lstrip('$')  # for $less → less
+
+        fingerprints.append(sign + pred)
+
+    return set(fingerprints)
+    # """
+    # Strip outer quantifiers/parens and return a *set* of literals.
+    # Example             →  ~p(X)|q(Y)
+    # (order & whitespace are irrelevant for equality testing)
+    # """
+    # txt = clause_text.strip()
+
+    # # strip universal quantifier if present
+    # m = re.match(r"^\(\s*!\s*\[[^\]]+\]\s*:\s*\(\s*(.*)\s*\)\s*\)\s*$", txt, re.DOTALL)
+    # if m:
+    #     body = m.group(1)
+    # else:
+    #     body = txt[1:-1] if txt.startswith('(') and txt.endswith(')') else txt
+
+    # body = re.sub(r"\s+", "", body)  # drop all whitespace
+    # return set(body.split('|'))
 
 
 # def find_matching_cnf_clause(problem_clauses, formula_text):

@@ -14,8 +14,8 @@ class ResolutionDataGenerator:
         max_function_arity: int = 1
     ):
         """Initialize the clause generator with customizable parameters."""
-        self.predicates = predicates or ["Pred1", "Pred2", "Pred3", "Pred4", "Pred5"]
-        self.variables = variables or ["X", "Y", "Z", "U", "V", "W"]
+        self.predicates = predicates or ["pred1", "pred2", "pred3"]#, "Pred4", "Pred5"]
+        self.variables = variables or ["X1", "X2", "X3"]#, "U", "V", "W"]
         self.constants = constants or ["const_a", "const_b", "const_c", "const_d", "const_e"]
         self.functions = functions or ["func_f", "func_g", "func_h"]
         self.max_clause_length = max_clause_length
@@ -177,8 +177,8 @@ class ResolutionDataGenerator:
 # Example usage
 if __name__ == "__main__":
     generator = ResolutionDataGenerator(
-        predicates=["Pred1", "Pred2", "Pred3"],
-        variables=["X", "Y", "Z"],
+        predicates=["p1", "p2", "p3"],
+        variables=["X1", "X2", "X3"],
         constants=["const_a", "const_b", "const_c"],
         max_clause_length=3,
         max_term_arity=2

@@ -125,12 +125,12 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    fileName = "CAT001-0"
+    fileName = "generated_axioms"
     axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    for k in range(10):
-        N=20
-        T=8.0
+    for k in range(10_000):
+        N=100
+        T=2.0
         problem = generate_problem(axioms, N, T)
 
         from resolvable_pair_extractor import find_candidate_resolvable_pairs

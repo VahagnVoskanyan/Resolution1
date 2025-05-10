@@ -1,7 +1,7 @@
 import random
 from typing import List, Dict, Any, Optional
 
-from unification_resolution_gnn_1 import UnificationResolution
+from GNN_data_rnd.unification_resolution_gnn_1 import UnificationResolution
 
 class RandomGenerators:
     def __init__(
@@ -16,8 +16,8 @@ class RandomGenerators:
         seed=42
     ):
         """Initialize the clause generator with customizable parameters."""
-        self.predicates = predicates or ["Pred1", "Pred2", "Pred3"]#, "Pred4", "Pred5"]
-        self.variables = variables or ["X", "Y", "Z"]#, "U", "V", "W"]
+        self.predicates = predicates or ["pred1", "pred2", "pred3"]#, "pred4", "pred5"]
+        self.variables = variables or ["X1", "X2", "X3"]#, "U", "V", "W"]
         self.constants = constants or ["const_a", "const_b", "const_c"]#, "const_d", "const_e"]
         self.functions = functions or ["func_f", "func_g"]#, "func_h"]
         self.max_clause_length = max_clause_length
