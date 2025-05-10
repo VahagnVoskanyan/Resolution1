@@ -168,5 +168,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# python compare_resolution_solvers.py --problems Test_Res_Pairs --checkpoint Models/gnn_model.pt
+# python compare_resolution_solvers.py --problems JsonlDataset --checkpoint Models/gnn_model1.pt
 # --predicates Pred1 Pred2 Pred3 --max_args 3
