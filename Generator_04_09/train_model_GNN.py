@@ -255,6 +255,7 @@ def main():
     parser.add_argument("--data", required=True, nargs="+",
                         help="One or more .jsonl files or directories")
     parser.add_argument("--epochs", type=int, default=10)
+    parser.add_argument("--init",  help="path to checkpoint to LOAD (optional)")
     parser.add_argument("--checkpoint", default="Models/gnn_model.pt")
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--predicates", nargs="+",
@@ -272,9 +273,15 @@ def main():
     test_loader  = DataLoader(test_set,  batch_size=8)
 
     model = EdgeClassifierGNN(in_dim=5, hidden_dim=64).to(device)
-    if os.path.exists(args.checkpoint):
-        model.load_state_dict(torch.load(args.checkpoint, map_location=device))
-        print(f"✓ Loaded checkpoint “{args.checkpoint}”")
+    load_path = args.init if args.init else (
+    args.checkpoint if os.path.exists(args.checkpoint) else None
+    )
+    if load_path:
+        model.load_state_dict(torch.load(load_path, map_location=device))
+    print(f"✓ Loaded weights from {load_path}")
+    # if os.path.exists(args.checkpoint):
+    #     model.load_state_dict(torch.load(args.checkpoint, map_location=device))
+    #     print(f"✓ Loaded checkpoint “{args.checkpoint}”")
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
@@ -313,8 +320,11 @@ if __name__ == "__main__":
 # Train from scratch on every JSONL in the current directory
 #python train_model_GNN.py --data Res_Pairs --epochs 30 --lr 1e-3 --checkpoint Models/gnn_model1.pt
 
-# Fine‑tune the SAME checkpoint on a *new* directory
-#python train_model_GNN.py --data Res_Pairs --epochs 5 --lr 1e-4 --checkpoint Models/gnn_model.pt
+# Keep overwriting the same file
+# python train_model_GNN.py --data Res_Pairs --epochs 5 --lr 1e-4 --checkpoint Models/gnn_model.pt
+
+# Fine‑tune and save as a new file
+# python train_model_GNN.py --data Res_Pairs --epochs 30 --lr 1e-6 --init Models/gnn_model1.pt --checkpoint Models/gnn_model2.pt
 
 
 # Predicate Names

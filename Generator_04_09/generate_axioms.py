@@ -17,15 +17,17 @@ class ResolutionDataGenerator:
         variables: List[str] = None,
         constants: List[str] = None,
         functions: List[str] = None,
+        min_clause_length: int = 1,
         max_clause_length: int = 3,
         max_term_arity: int = 3,
         max_function_arity: int = 1
     ):
         """Initialize the clause generator with customizable parameters."""
-        self.predicates = predicates or ["pred1", "pred2", "pred3"]
-        self.variables = variables or ["X1", "X2", "X3"]
-        self.constants = constants or ["const_a", "const_b", "const_c", "const_d", "const_e"]
+        self.predicates = predicates or ["pred1", "pred2", "pred3", "pred4"]
+        self.variables = variables or ["X0", "X1", "X2"]
+        self.constants = constants or ["const_a", "const_b", "const_c"]#, "const_d", "const_e"]
         self.functions = functions or ["func_f", "func_g", "func_h"]
+        self.min_clause_length = min_clause_length
         self.max_clause_length = max_clause_length
         self.max_term_arity = max_term_arity
         self.max_function_arity = max_function_arity
@@ -95,7 +97,8 @@ class ResolutionDataGenerator:
     def generate_non_trivial_clause(self, max_attempts: int = 100) -> List[str]:
         """Generate a clause that is neither tautological nor trivial."""
         for _ in range(max_attempts):
-            num_literals = random.randint(1, self.max_clause_length)
+            # Choose length between min and max
+            num_literals = random.randint(self.min_clause_length, self.max_clause_length)
             clause = [self.generate_literal() for _ in range(num_literals)]
             
             if not (self.is_tautological_clause(clause) or self.is_trivial_clause(clause)):
@@ -106,6 +109,7 @@ class ResolutionDataGenerator:
 
 def generate_axioms(
     num_axioms: int,
+    min_clause_length: int,
     max_clause_length: int,
     max_term_arity: int,
     output_file: str
@@ -119,6 +123,7 @@ def generate_axioms(
     :param output_file: path to write the .ax file
     """
     generator = ResolutionDataGenerator(
+        min_clause_length=min_clause_length,
         max_clause_length=max_clause_length,
         max_term_arity=max_term_arity
     )
@@ -146,6 +151,11 @@ def main():
         help='Number of axioms to generate'
     )
     parser.add_argument(
+        '--min-clause-length', '-m',
+        type=int, default=1,
+        help='Minimum literals per clause'
+    )
+    parser.add_argument(
         '--max-clause-length', '-c',
         type=int, default=3,
         help='Maximum literals per clause'
@@ -164,6 +174,7 @@ def main():
 
     generate_axioms(
         num_axioms=args.num_axioms,
+        min_clause_length=args.min_clause_length,
         max_clause_length=args.max_clause_length,
         max_term_arity=args.max_term_arity,
         output_file=args.output_file
@@ -171,3 +182,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# python generate_axioms.py -n 12 -m 1 -c 5 -o Axioms/generated_axiom_file_2.ax
