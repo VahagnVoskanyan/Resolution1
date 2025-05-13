@@ -400,7 +400,7 @@ if __name__ == "__main__":
 # print(f"Merged → {out}")
 
 # Train from scratch on every JSONL in the current directory
-# python train_model_GNN.py --data Res_Pairs_Copy --epochs 30 --lr 1e-3 --checkpoint Models/gnn_model3.pt
+# python train_model_GNN.py --data Res_Pairs_Copy --epochs 50 --lr 1e-3 --checkpoint Models/gnn_model3.pt
 # python train_model_GNN.py --data Res_Pairs --epochs 30 --lr 1e-3 --checkpoint Models/gnn_model3.pt
 
 # Keep overwriting the same file

@@ -130,10 +130,10 @@ if __name__ == '__main__':
 
     for k in range(2000):
         N=100
-        T=6.0
+        T=4.0
         problem = generate_problem(axioms, N, T)
 
-        from resolvable_pair_extractor_helper import find_candidate_resolvable_pairs
+        from resolvable_pair_finder_helper import find_candidate_resolvable_pairs
         resolvable_pairs = find_candidate_resolvable_pairs(problem)
 
         json_filename = f'Res_Pairs/gen_problem_{fileName}_N={N}_T={T}_{k}_rs.jsonl'
