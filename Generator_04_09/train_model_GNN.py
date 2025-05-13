@@ -3,10 +3,12 @@ import glob, json, re, os, random
 from typing import Dict, List, Any, Sequence
 
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.data import Data, Dataset
 from torch_geometric.loader import DataLoader
 from torch_geometric.nn import SAGEConv
+from torch_geometric.utils import to_undirected
 
 ##############################################################################
 # 1)  Literal helpers (unchanged)
@@ -105,17 +107,20 @@ def build_graph_from_example(
         )
         labels.append(1 if is_best else 0)
 
-    # reversed edge
-    edge_src.append(dst)
-    edge_dst.append(src)
-    labels.append(1 if is_best else 0)
-
+    if len(edge_src) == 0:
+        # No candidate resolution pairs ⇒ skip the example
+        problem_id = example.get("problem_id", "<unknown>")
+        print(f"⚠️  example {problem_id} had no valid edges after cleaning.")
+        return None                         # caller can filter out Nones
+    
     edge_index = torch.tensor([edge_src, edge_dst], dtype=torch.long)
-    y          = torch.tensor(labels, dtype=torch.long)
+    # make the graph symmetric
+    num_fwd = edge_index.size(1)            # how many edges we had
+    edge_index = to_undirected(edge_index)  # adds the missing reverse ones
+    added = edge_index.size(1) - num_fwd
+    labels = labels + labels[:added]        # keep the same class for each twin
+    y = torch.tensor(labels, dtype=torch.long)
 
-    if len(labels) == 0:
-        print("⚠️  example", example.get("problem_id", "<unknown>"),
-              "had no valid edges after cleaning.")
     return Data(x=x, edge_index=edge_index, y=y)
 
 
@@ -141,26 +146,18 @@ class ClauseResolutionDataset(Dataset):
     def __init__(
         self,
         paths: Sequence[str],
-        predicate_list: List[str],
+        predicate_list: List[str] | None = None,
         max_args: int = 3,
+        use_cache = True
     ):
         super().__init__(root=None)
         self.max_args = max_args
-        if predicate_list:
-            pred_list = predicate_list
-        else:
-            # auto-collect from the dataset
-            seen = {}
-            for ex in examples:
-                for _cid, _ctype, lits in ex["clauses"]:
-                    for lit in lits:
-                        m = re.match(r'\s*[~¬]?\s*([A-Za-z0-9_]+)\(', lit)
-                        if m and m.group(1) not in seen:
-                            seen[m.group(1)] = None
-            pred_list = list(seen)
-        self.predicate_to_idx = {p: i + 1 for i, p in enumerate(pred_list)}
 
-        examples: List[Dict[str, Any]] = []
+        self._cache_enabled = use_cache
+        self._cache: dict[int, Data] = {} # (optional) cache
+
+        # 1) Load *all* examples FIRST
+        examples: list[dict[str, Any]] = []
         for p in paths:
             if os.path.isdir(p):
                 for fn in glob.glob(os.path.join(p, "*.jsonl")):
@@ -170,38 +167,118 @@ class ClauseResolutionDataset(Dataset):
 
         if not examples:
             raise RuntimeError(f"No examples found in {paths}")
-
         self.examples = examples
 
-    def len(self) -> int:
-        return len(self.examples)
+        # 2) Build predicate vocabulary
+        if predicate_list:
+            pred_list = predicate_list
+        else:
+            # auto-collect from the dataset
+            seen: set[str] = set()
+            for ex in examples:
+                for _cid, _ctype, lits in ex["clauses"]:
+                    for lit in lits:
+                        m = re.match(r'\s*[~¬]?\s*([A-Za-z0-9_]+)\(', lit)
+                        if m:
+                            seen.add(m.group(1))
+            pred_list = sorted(seen)              # stable order
+        self.predicate_to_idx = {p: i + 1 for i, p in enumerate(pred_list)}
 
-    def get(self, idx):
+        self.examples = examples
+        
+    # PyG expects these exact names
+    def len(self):           return len(self.examples)
+
+    def get(self, idx: int) -> Data:
+        if self._cache_enabled:
+            if idx not in self._cache:
+                self._cache[idx] = build_graph_from_example(
+                    self.examples[idx],
+                    self.predicate_to_idx,
+                    self.max_args
+                )
+            return self._cache[idx]
+
+        # caching disabled → always rebuild
         return build_graph_from_example(
-            self.examples[idx], self.predicate_to_idx, self.max_args
+            self.examples[idx],
+            self.predicate_to_idx,
+            self.max_args
         )
 
-
 ##############################################################################
-# 4)  GNN model  (unchanged)
+# 4)  GNN model
 ##############################################################################
 class EdgeClassifierGNN(torch.nn.Module):
-    def __init__(self, in_dim: int, hidden_dim: int = 64, out_dim: int = 2):
+    #def __init__(self, in_dim: int, hidden_dim: int = 64, out_dim: int = 2):
+    """
+    Node‑wise input:
+       sign bit (float 0/1)
+       predicate_id  ← will be turned into an embedding vector
+       arg_type[0‥k-1] (floats 0/1/2 or –1 for PAD)
+    Edge label: 0 = non‑best, 1 = best resolvable pair
+    """
+    def __init__(
+        self,
+        num_predicates: int,
+        max_args: int,
+        d_pred: int      = 16,   # embedding size
+        hidden_dim: int  = 64,
+        out_dim: int     = 2,
+        dropout: float   = 0.20
+    ):
         super().__init__()
-        self.conv1 = SAGEConv(in_dim, hidden_dim)
-        self.conv2 = SAGEConv(hidden_dim, hidden_dim)
-        self.edge_mlp = torch.nn.Sequential(
-            torch.nn.Linear(2 * hidden_dim, hidden_dim),
-            torch.nn.ReLU(),
-            torch.nn.Linear(hidden_dim, out_dim),
+        # 1) predicate embedding table (+1 for UNK / out‑of‑vocab)
+        self.pred_embed = nn.Embedding(num_predicates + 1, d_pred)
+        # 2) compute input feature length (sign + args + embed)
+        numeric_dim = 1 + max_args                # we will drop the raw pred‑id
+        in_dim      = numeric_dim + d_pred
+        # 3) GNN trunk
+        self.conv1   = SAGEConv(in_dim, hidden_dim, normalize=True)
+        self.conv2   = SAGEConv(hidden_dim, hidden_dim, normalize=True)
+        self.dropout = nn.Dropout(dropout)
+        # 4) Edge‑score MLP
+        self.edge_mlp = nn.Sequential(
+            nn.Linear(2 * hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, out_dim)
         )
 
-    def forward(self, x, edge_index):
-        h = F.relu(self.conv1(x, edge_index))
-        h = F.relu(self.conv2(h, edge_index))
+    def forward(self, x: torch.Tensor, edge_index: torch.Tensor) -> torch.Tensor:
+        """
+        x : (N , 2+max_args)  – raw node features from the dataset
+        edge_index : (2 , E)  – PyG convention
+        """
+        # 1) split the feature cols
+        sign_and_args = torch.cat([x[:, :1],   # sign
+                                   x[:, 2: ]], dim=1)   # arg types
+        pid_idx       = x[:, 1].long()                  # predicate column as ints
+        pvec          = self.pred_embed(pid_idx)        # (N , d_pred)
+        # 2) concatenate → full node feature
+        h0 = torch.cat([sign_and_args, pvec], dim=1)    # (N , numeric+d_pred)
+        # 3) message passing
+        h = self.dropout(F.relu(self.conv1(h0, edge_index)))
+        h = self.dropout(F.relu(self.conv2(h,  edge_index)))
+        # 4) edge‑wise representation
         src, dst = edge_index
-        edge_rep = torch.cat([h[src], h[dst]], dim=1)
-        return self.edge_mlp(edge_rep)
+        edge_rep = torch.cat([h[src], h[dst]], dim=1)   # (E , 2*hidden_dim)
+        return self.edge_mlp(edge_rep)                  # logits (E , 2)
+    
+    #     super().__init__()
+    #     self.conv1 = SAGEConv(in_dim, hidden_dim)
+    #     self.conv2 = SAGEConv(hidden_dim, hidden_dim)
+    #     self.edge_mlp = torch.nn.Sequential(
+    #         torch.nn.Linear(2 * hidden_dim, hidden_dim),
+    #         torch.nn.ReLU(),
+    #         torch.nn.Linear(hidden_dim, out_dim),
+    #     )
+
+    # def forward(self, x, edge_index):
+    #     h = F.relu(self.conv1(x, edge_index))
+    #     h = F.relu(self.conv2(h, edge_index))
+    #     src, dst = edge_index
+    #     edge_rep = torch.cat([h[src], h[dst]], dim=1)
+    #     return self.edge_mlp(edge_rep)
 
 
 ##############################################################################
@@ -258,21 +335,26 @@ def main():
     parser.add_argument("--init",  help="path to checkpoint to LOAD (optional)")
     parser.add_argument("--checkpoint", default="Models/gnn_model.pt")
     parser.add_argument("--lr", type=float, default=1e-4)
-    parser.add_argument("--predicates", nargs="+",
-                        default=["Pred1", "Pred2", "Pred3"])
+    parser.add_argument("--predicates", nargs="+")
     args = parser.parse_args()
+
+    args.predicates = ["pred1", "pred2", "pred3", "pred4", "pred5"]
+    max_args = 8
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     dataset = ClauseResolutionDataset(
         paths=args.data,
         predicate_list=args.predicates,
-        max_args=3,
+        max_args=max_args,
+        use_cache=True
     )
     train_set, test_set = split_dataset(dataset, train_ratio=0.8)
     train_loader = DataLoader(train_set, batch_size=8, shuffle=True)
     test_loader  = DataLoader(test_set,  batch_size=8)
 
-    model = EdgeClassifierGNN(in_dim=5, hidden_dim=64).to(device)
+    num_preds = len(dataset.predicate_to_idx)      # vocabulary size
+    model = EdgeClassifierGNN(num_predicates=num_preds,
+            max_args=max_args, hidden_dim=64).to(device)
     load_path = args.init if args.init else (
     args.checkpoint if os.path.exists(args.checkpoint) else None
     )
@@ -318,7 +400,8 @@ if __name__ == "__main__":
 # print(f"Merged → {out}")
 
 # Train from scratch on every JSONL in the current directory
-#python train_model_GNN.py --data Res_Pairs --epochs 30 --lr 1e-3 --checkpoint Models/gnn_model1.pt
+# python train_model_GNN.py --data Res_Pairs_Copy --epochs 30 --lr 1e-3 --checkpoint Models/gnn_model3.pt
+# python train_model_GNN.py --data Res_Pairs --epochs 30 --lr 1e-3 --checkpoint Models/gnn_model3.pt
 
 # Keep overwriting the same file
 # python train_model_GNN.py --data Res_Pairs --epochs 5 --lr 1e-4 --checkpoint Models/gnn_model.pt

@@ -23,7 +23,7 @@ class ResolutionDataGenerator:
         max_function_arity: int = 1
     ):
         """Initialize the clause generator with customizable parameters."""
-        self.predicates = predicates or ["pred1", "pred2", "pred3", "pred4"]
+        self.predicates = predicates or ["pred1", "pred2", "pred3", "pred4", "pred5"]
         self.variables = variables or ["X0", "X1", "X2"]
         self.constants = constants or ["const_a", "const_b", "const_c"]#, "const_d", "const_e"]
         self.functions = functions or ["func_f", "func_g", "func_h"]

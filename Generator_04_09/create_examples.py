@@ -47,25 +47,25 @@ def forward_propose(axioms, N=10, temperature=5.0):
     :param temperature: a parameter for softmax-weighting by clause size  
     :return: the final clause (a set of literals), which will serve as the conject
     """
-    # Берём все аксиомные клаузы (роль 'axiom')
+    # Take all axiom clauses (role 'axiom').
     known_clauses = [cl for (_, role, cl) in axioms if role == 'axiom']
     
-    # Выбираем случайно стартовую клаузу C0
+    # Randomly select the starting clause C0.
     C0 = random.choice(known_clauses)
     chain = [C0]
 
     for t in range(N):
         candidates = []
-        # Для каждой известной клаузы пытаемся резолвировать chain[-1] с ней
+        # For each known clause, attempt to resolve chain[-1] with it.
         for c2 in known_clauses:
             cand = all_resolvents(chain[-1], c2)
             candidates.extend(cand)
         
-        # Если ни одной резолвенты не найдено, цепочка остановлена
+        # If no resolvents are found, the chain is terminated.
         if not candidates:
             break
         
-        # Softmax по «размеру» (числу литералов) – чем меньше клауза, тем выше вероятность выбора
+        # Softmax over "size" (number of literals) – the smaller the clause, the higher the selection probability.
         sizes = np.array([len(c) for c in candidates])
         weights = np.exp(-sizes / temperature)
         probs = weights / np.sum(weights)
@@ -75,7 +75,7 @@ def forward_propose(axioms, N=10, temperature=5.0):
         chain.append(Cnew)
         known_clauses.append(Cnew)
     
-    # Возвращаем последнюю клаузу цепочки, которая будет нашим «conjecture»
+    # Returns the last clause in the chain, which will be our "conjecture".
     return chain[-1]
 
 def negate_clause(clause: set) -> list:
@@ -111,13 +111,13 @@ def generate_problem(axioms, N=10, T=5.0):
     
     return problem
 
-# #Пример использования:
+# Example of usage:
 # axioms = parse_tptp_clauses('Axioms_clausified/NUM005+1.ax_claused.txt')
 # for k in range(1000):
 #     prob = generate_problem(axioms, N=10, T=5.0)
 #     write_to_tptp(prob, f'gen_problem_{k}.p')
 
-# #Пример использования: parse_tptp_clauses(filename)
+# Example of usage: parse_tptp_clauses(filename)
 # if __name__ == '__main__':
 #     filePath = 'Axioms_clausified/CAT002-0.ax_claused.txt'
 #     cl_list = parse_tptp_clauses(filePath)
@@ -125,12 +125,12 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    fileName = "CAT004-0"
+    fileName = "generated_axioms"
     axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    for k in range(100):
+    for k in range(2000):
         N=100
-        T=2.0
+        T=6.0
         problem = generate_problem(axioms, N, T)
 
         from resolvable_pair_extractor_helper import find_candidate_resolvable_pairs

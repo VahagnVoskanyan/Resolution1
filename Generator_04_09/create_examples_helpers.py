@@ -4,19 +4,19 @@ from unification_resolution import UnificationResolution
 
 def parse_tptp_clauses(filePath):
     """
-    Простейший парсер TPTP для axiom-клауз.
-    Возвращает список троек (name, role, set_of_literals).
-    Каждый литерал представлен в виде строки.
+    A simple TPTP parser for axiom clauses.
+    Returns a list of triples (name, role, set_of_literals).
+    Each literal is represented as a string.
     """
     clauses = []
     with open(filePath, 'r') as f:
-        # Читаем файл целиком и удаляем комментарии (начинающиеся с %)
+        # Read the entire file and remove comments (starting with %)
         content = f.read()
-    # Удаляем строки-комментарии
+    # Remove comment lines
     content = "\n".join(line for line in content.splitlines() if not line.strip().startswith('%'))
     
-    # Поскольку каждая клауза оканчивается на ").", используем регекс чтобы найти все конструкции
-    # Примерная форма: cnf(u65,axiom, ... ).  (с возможными переносами строк)
+    # Since each clause ends with ").", we use a regex to find all such constructs.
+    # Approximate format: cnf(u65,axiom, ... ). (with possible line breaks)
     pattern = r'cnf\s*\(\s*([^,]+)\s*,\s*([^,]+)\s*,(.*?)\)\s*\.'
     matches = re.finditer(pattern, content, re.DOTALL)
     
@@ -25,14 +25,14 @@ def parse_tptp_clauses(filePath):
         role = m.group(2).strip()
         formula = m.group(3).strip()
         
-        # Если формула окружена внешними скобками, удалим их
+        # If the formula is enclosed in outer parentheses, remove them.
         if formula.startswith('(') and formula.endswith(')'):
             formula = formula[1:-1].strip()
         
-        # Разбиваем формулу по символу '|' для получения литералов.
-        # Здесь предполагаем, что оператор дисъюнкции не встречается внутри литералов.
+        # Split the formula by the '|' character to get the literals.
+        # Here we assume the disjunction operator does not occur inside literals.
         literals = [lit.strip() for lit in formula.split('|') if lit.strip()]
-        # Приводим к множеству (или можно оставить списком, если важна кратность)
+        # Convert to a set (or can keep as a list if multiplicity matters)
         literal_set = set(literals)
         
         clauses.append((name, role, literal_set))
