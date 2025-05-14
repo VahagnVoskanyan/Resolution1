@@ -59,8 +59,8 @@ class ResolutionDataGenerator:
         predicate = random.choice(self.predicates)
         arity = random.randint(1, self.max_term_arity)
         
-        # Generate terms, ensuring top-level terms are variables
-        terms = [self.generate_term(is_top_level=True) for _ in range(arity)]
+        # Now allow any term type at all positions
+        terms = [self.generate_term(allow_function=True) for _ in range(arity)]
         
         # Randomly decide polarity if not specified
         if polarity is None:
@@ -147,27 +147,27 @@ def main():
     )
     parser.add_argument(
         '--num-axioms', '-n',
-        type=int, default=10,
+        type=int, default=20,
         help='Number of axioms to generate'
     )
     parser.add_argument(
         '--min-clause-length', '-m',
-        type=int, default=1,
+        type=int, default=2,
         help='Minimum literals per clause'
     )
     parser.add_argument(
         '--max-clause-length', '-c',
-        type=int, default=3,
+        type=int, default=5,
         help='Maximum literals per clause'
     )
     parser.add_argument(
         '--max-term-arity', '-a',
-        type=int, default=2,
+        type=int, default=3,
         help='Maximum predicate arity'
     )
     parser.add_argument(
         '--output-file', '-o',
-        type=str, default='Axioms/generated_axiom_file_1.ax',
+        type=str, default='Axioms/gen_ax_file_3_t.ax',
         help='Output .ax file name'
     )
     args = parser.parse_args()
@@ -183,4 +183,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-# python generate_axioms.py -n 12 -m 1 -c 5 -o Axioms/generated_axiom_file_2.ax
+# python generate_axioms.py -n 20 -m 2 -c 5 -a 3 -o Axioms/generated_axiom_file_2.ax

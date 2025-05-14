@@ -36,7 +36,7 @@ def parse_tptp_clauses(filePath):
         literal_set = set(literals)
         
         clauses.append((name, role, literal_set))
-        print(clauses[-1])
+        #print(clauses[-1])
     
     return clauses
 

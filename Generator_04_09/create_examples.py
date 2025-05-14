@@ -125,22 +125,45 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    fileName = "generated_axioms"
+    fileName = "gen_ax_file_3_t"
     axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    for k in range(2000):
+    for k in range(50):
         N=100
-        T=6.0
+        T=2.0
         problem = generate_problem(axioms, N, T)
 
-        from resolvable_pair_extractor_helper import find_candidate_resolvable_pairs
-        resolvable_pairs = find_candidate_resolvable_pairs(problem)
+        write_to_tptp(problem, f'Gen_Problems/gen_prob_{fileName}_N={N}_T={T}_{k}.p')
 
-        json_filename = f'Res_Pairs/gen_problem_{fileName}_N={N}_T={T}_{k}_rs.jsonl'
+    # Clausify generated problem files
+    from renumber_clause_ids import command
+    import subprocess
+    subprocess.run(command)
 
-        with open(json_filename, "w") as fp:
-            fp.write(json.dumps(resolvable_pairs) + "\n")
-        print(f"wrote {json_filename}")
+    # Parse all clausified problems and find resolvable pairs
+    import os
+    import glob
+    from resolvable_pair_finder_helper import find_candidate_resolvable_pairs
+    for prob_path in glob.glob('Gen_Problems_Copy/*.p'):
+        clauses = parse_tptp_clauses(prob_path)
+        resolvable_pairs = find_candidate_resolvable_pairs(clauses)
+        base = os.path.splitext(os.path.basename(prob_path))[0]
+        json_filename = f'Res_Pairs/{base}_rs.jsonl'
+        with open(json_filename, 'w') as fp:
+            json.dump(resolvable_pairs, fp)
+        print(f"Wrote {json_filename}")
+
+
+
+        # from resolvable_pair_finder_helper import find_candidate_resolvable_pairs
+        # resolvable_pairs = find_candidate_resolvable_pairs(problem)
+
+        # json_filename = f'Res_Pairs/gen_prob_{fileName}_N={N}_T={T}_{k}_rs.jsonl'
+
+        # with open(json_filename, "w") as fp:
+        #     fp.write(json.dumps(resolvable_pairs) + "\n")
+        # print(f"wrote {json_filename}")
+
 
         # with open(json_filename, 'w') as fp:
         #     fp.write(json.dumps({"clauses": resolvable_pairs["clauses"]}) + "\n")
@@ -158,8 +181,6 @@ if __name__ == '__main__':
         # with open(json_filename, 'w') as fp:
         #      json.dump(ser_clauses, fp)
         ###
-
-        write_to_tptp(problem, f'Gen_Problems/gen_problem_{fileName}_N={N}_T={T}_{k}.p')
 
         # Slows down everything
         #run_comnnads_solve.run_docker_solve_command()
