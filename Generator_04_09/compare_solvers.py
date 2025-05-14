@@ -244,5 +244,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# python compare_solvers.py --problems Dataset/Test_Res_Pairs_2 --checkpoint Models/gnn_model3.pt --max_args 8
+# python compare_solvers.py --problems Dataset/Test_Res_Pairs_4 --checkpoint Models/gnn_model4.pt --max_args 8
 # --predicates Pred1 Pred2 Pred3 --max_args 8
