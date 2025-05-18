@@ -1,8 +1,11 @@
 import subprocess
 import os
 
-output_dir = r'C:\\Users\\USER\\Desktop\\Thesis\\Resolution1\\Generator_04_09\\Gen_Problems_Copy'
-input_dir = r'C:\\Users\\USER\\Desktop\\Thesis\\Resolution1\\Generator_04_09\\Gen_Problems'
+output_dir = r'C:\\Users\\vahag\\Desktop\\BaseFolder\\University\\Thesis\\GitFiles1\\Generator_04_09\\Gen_Problems_Clausified'
+input_dir = r'C:\\Users\\vahag\\Desktop\\BaseFolder\\University\\Thesis\\GitFiles1\\Generator_04_09\\Gen_Problems'
+
+#output_dir = r'C:\\Users\\USER\\Desktop\\Thesis\\Resolution1\\Generator_04_09\\Gen_Problems_Copy'
+#input_dir = r'C:\\Users\\USER\\Desktop\\Thesis\\Resolution1\\Generator_04_09\\Gen_Problems'
 os.makedirs(output_dir, exist_ok=True)
 
 command = [

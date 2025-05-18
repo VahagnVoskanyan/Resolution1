@@ -140,7 +140,7 @@ def main():
     ap.add_argument("--predicates", nargs="+",
                     default=["pred1", "pred2", "pred3", "pred4", "pred5"])
     ap.add_argument("--max_args", type=int, default=3)
-    ap.add_argument("--timeout", type=int, default=30)
+    ap.add_argument("--timeout", type=int, default=10)
                     
     args = ap.parse_args()
 

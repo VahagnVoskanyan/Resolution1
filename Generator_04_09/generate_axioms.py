@@ -147,7 +147,7 @@ def main():
     )
     parser.add_argument(
         '--num-axioms', '-n',
-        type=int, default=20,
+        type=int, default=30,
         help='Number of axioms to generate'
     )
     parser.add_argument(
@@ -167,7 +167,7 @@ def main():
     )
     parser.add_argument(
         '--output-file', '-o',
-        type=str, default='Axioms/gen_ax_file_3_t.ax',
+        type=str, default='Axioms/gen_ax_file_7.ax',
         help='Output .ax file name'
     )
     args = parser.parse_args()
@@ -183,4 +183,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-# python generate_axioms.py -n 20 -m 2 -c 5 -a 3 -o Axioms/generated_axiom_file_2.ax
+# python generate_axioms.py -n 20 -m 2 -c 5 -a 3 -o Axioms/gen_ax_file_7.ax

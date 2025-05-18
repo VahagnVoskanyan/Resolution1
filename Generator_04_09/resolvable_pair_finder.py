@@ -81,6 +81,17 @@ def find_candidate_resolvable_pairs(
     }
 
 
+if __name__ == "__main__":
+    import glob, os, json
+    from create_examples_helpers import parse_tptp_clauses
+    for prob_path in glob.glob('Gen_Problems_Clausified/*.p'):
+        clauses = parse_tptp_clauses(prob_path)
+        resolvable_pairs = find_candidate_resolvable_pairs(clauses)
+        base = os.path.splitext(os.path.basename(prob_path))[0]
+        json_filename = f'Res_Pairs/{base}_rs.jsonl'
+        with open(json_filename, 'w') as fp:
+            json.dump(resolvable_pairs, fp)
+        print(f"Wrote {json_filename}")
 
 # if __name__ == "__main__":
 #     from create_examples import parse_tptp_clauses

@@ -125,33 +125,34 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    fileName = "gen_ax_file_3_t"
+    fileName = "gen_ax_file_7"
     axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    for k in range(50):
+    for k in range(1799, 1800):
         N=100
-        T=2.0
+        T=8.0
         problem = generate_problem(axioms, N, T)
 
         write_to_tptp(problem, f'Gen_Problems/gen_prob_{fileName}_N={N}_T={T}_{k}.p')
+        print(f"Problem created: {fileName}_{k}")
 
     # Clausify generated problem files
-    from renumber_clause_ids import command
-    import subprocess
-    subprocess.run(command)
+    #from renumber_clause_ids import command
+    #import subprocess
+    #subprocess.run(command)
 
     # Parse all clausified problems and find resolvable pairs
-    import os
-    import glob
-    from resolvable_pair_finder_helper import find_candidate_resolvable_pairs
-    for prob_path in glob.glob('Gen_Problems_Copy/*.p'):
-        clauses = parse_tptp_clauses(prob_path)
-        resolvable_pairs = find_candidate_resolvable_pairs(clauses)
-        base = os.path.splitext(os.path.basename(prob_path))[0]
-        json_filename = f'Res_Pairs/{base}_rs.jsonl'
-        with open(json_filename, 'w') as fp:
-            json.dump(resolvable_pairs, fp)
-        print(f"Wrote {json_filename}")
+    # import os
+    # import glob
+    # from resolvable_pair_finder_helper import find_candidate_resolvable_pairs
+    # for prob_path in glob.glob('Gen_Problems_Copy/*.p'):
+    #     clauses = parse_tptp_clauses(prob_path)
+    #     resolvable_pairs = find_candidate_resolvable_pairs(clauses)
+    #     base = os.path.splitext(os.path.basename(prob_path))[0]
+    #     json_filename = f'Res_Pairs/{base}_rs.jsonl'
+    #     with open(json_filename, 'w') as fp:
+    #         json.dump(resolvable_pairs, fp)
+    #     print(f"Wrote {json_filename}")
 
 
 

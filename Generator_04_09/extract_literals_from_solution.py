@@ -230,24 +230,27 @@ def write_best_pair(json_path: str,
     with open(json_path, "r", encoding="utf‑8") as fp:
         data = json.load(fp)
 
-    # make sure the list exists
-    rp = data.setdefault("resolvable_pairs", [])
+    # OPTION A – store just the index
+    if pair_dict:                      # ← found a real pair
+        # make sure the list exists
+        rp = data.setdefault("resolvable_pairs", [])
 
-    # try to find existing identical entry
-    try:
-        idx = next(i for i, p in enumerate(rp) if p == pair_dict)
-    except StopIteration:
-        idx = len(rp)
-        rp.append(pair_dict)
+        # try to find existing identical entry
+        try:
+            idx = next(i for i, p in enumerate(rp) if p == pair_dict)
+        except StopIteration:
+            idx = len(rp)
+            rp.append(pair_dict)
 
-    # annotate resolved‑literals (optional, for human inspection)
-    # pair_dict.setdefault("literal_pair", {
-    #     "from_A": literal_pair[0] if literal_pair else None,
-    #     "from_B": literal_pair[1] if literal_pair else None,
-    # })
-
-    # OPTION A – store just the index (leaner, what you asked)
-    data["best_pair_index"] = idx
+        # annotate resolved‑literals (optional, for human inspection)
+        # pair_dict.setdefault("literal_pair", {
+        #     "from_A": literal_pair[0] if literal_pair else None,
+        #     "from_B": literal_pair[1] if literal_pair else None,
+        # })
+        data["best_pair_index"] = idx
+    else:                              # ← nothing found
+        data["best_pair_index"] = None
+    #data["best_pair_index"] = idx
 
     # OPTION B – comment out the line above and uncomment below
     # data["best_pair"] = pair_dict
@@ -296,6 +299,7 @@ def process_files(problem_folder, output_folder):
         formula, inf_type, clause_ids = find_first_original_inference_by_role(proof)
         if not inf_type or len(clause_ids) != 2:
             print("  ↳ Skipping (need a binary inference on originals).")
+            write_best_pair(problem_file, {}, None) 
             continue
 
         # ------------------------------------------------------------------
@@ -321,6 +325,7 @@ def process_files(problem_folder, output_folder):
                         break
             if match_idx is None:
                 print(f"  ✗ Could not map clause {cid} to JSONL entry – skipped.")
+                write_best_pair(problem_file, {}, None)
                 break
             mapping[cid] = (match_idx, proof_txt)
         else:

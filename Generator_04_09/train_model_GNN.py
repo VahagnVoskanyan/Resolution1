@@ -165,9 +165,15 @@ class ClauseResolutionDataset(Dataset):
             else:
                 examples.extend(_load_jsonl(p))
 
-        if not examples:
-            raise RuntimeError(f"No examples found in {paths}")
-        self.examples = examples
+        filtered: list[dict[str, Any]] = []
+        for ex in examples:
+            if _extract_best_pair(ex) is None:
+                pid = ex.get("problem_id", "<unknown>")
+                print(f"⏭️  skipping {pid} – best_pair is None")
+                continue
+            filtered.append(ex)
+
+        self.examples = filtered
 
         # 2) Build predicate vocabulary
         if predicate_list:
