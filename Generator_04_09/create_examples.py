@@ -125,11 +125,11 @@ def generate_problem(axioms, N=10, T=5.0):
 #         print(cl)
 
 if __name__ == '__main__':
-    fileName = "gen_ax_file_7"
+    fileName = "CAT001-0"
     axioms = parse_tptp_clauses(f'Axioms_clausified/{fileName}.ax_claused.txt')
 
-    for k in range(1799, 1800):
-        N=100
+    for k in range(2000):
+        N=50
         T=8.0
         problem = generate_problem(axioms, N, T)
 
