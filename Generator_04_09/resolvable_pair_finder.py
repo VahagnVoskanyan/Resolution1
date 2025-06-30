@@ -85,7 +85,7 @@ if __name__ == "__main__":
     import glob, os, json
     from create_examples_helpers import parse_tptp_clauses
     #or prob_path in glob.glob('Gen_Problems_Clausified/*.p'):
-    for prob_path in glob.glob('Gen_Problems/*.p'):
+    for prob_path in glob.glob('Gen_Problems_Copy/*.p'):
         clauses = parse_tptp_clauses(prob_path)
         resolvable_pairs = find_candidate_resolvable_pairs(clauses)
         base = os.path.splitext(os.path.basename(prob_path))[0]

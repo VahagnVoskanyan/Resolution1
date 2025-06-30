@@ -365,6 +365,6 @@ def process_files(problem_folder, output_folder):
 if __name__ == "__main__":
     # Configure these paths for your system
     problem_folder = "Res_Pairs"    # Folder containing the .jsonl files
-    output_folder = "Output"        # Folder containing the _solved.txt files
+    output_folder = "Output_Copy"        # Folder containing the _solved.txt files
 
     process_files(problem_folder, output_folder)

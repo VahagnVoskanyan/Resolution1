@@ -72,26 +72,34 @@ def main():
     dataset = ClauseResolutionDataset(
         paths=args.data,
         predicate_list=args.predicates,
-        max_args=3,
+        max_args=8,
     )
     loader = DataLoader(dataset, batch_size=8, shuffle=False)
 
     # Restore model with the same input/output dims
-    model = EdgeClassifierGNN(in_dim=5, hidden_dim=64).to(device)
+    #model = EdgeClassifierGNN(in_dim=5, hidden_dim=64).to(device)
+    # Restore model
+    model = EdgeClassifierGNN(
+        num_predicates=len(args.predicates),
+        max_args=8,
+        hidden_dim=64
+    ).to(device)
     model.load_state_dict(torch.load(args.checkpoint, map_location=device))
     model.eval()
 
-    # ---- metrics ----
+    # Metrics
     acc  = edge_accuracy(model, loader, device)
     hit1 = hits_at_1(model, dataset, device)
-    p,r,f = prf1(model, loader, device)
+    p, r, f = prf1(model, loader, device)
 
-    #print(f"\nEdge accuracy : {acc:.3%}")
-    print(f"Hits@1       : {hit1:.3%}")
+    print(f"Edge accuracy : {acc:.3%}")
+    print(f"Hits@1        : {hit1:.3%}")
     print(f"Positive edge – precision {p:.3%} | recall {r:.3%} | F1 {f:.3%}")
 
 
 if __name__ == "__main__":
     main()
 
-#python eval_model.py --data Test_Res_Pairs --checkpoint Models/gnn_model1.pt --predicates convergent_lines unorthogonal_lines
+#python eval_model.py --data Dataset/Test_Res_Pairs_3 --checkpoint Models/gnn_model.pt --predicates convergent_lines unorthogonal_lines
+
+#python eval_model.py --data Dataset/Test_Res_Pairs_4 --checkpoint Models/gnn_model3.pt --predicates pred1, pred2, pred3, pred4, pred5
